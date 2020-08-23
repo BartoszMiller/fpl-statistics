@@ -1,10 +1,11 @@
 package com.fplstatistics.app.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import java.util.List;
 
 @Entity
@@ -14,9 +15,11 @@ public class Season {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Column(unique = true)
     private String code;
+    private boolean active;
 
-    @OneToMany
+    @ManyToMany
     private List<Team> teams;
 
     public Integer getId() {
@@ -33,6 +36,14 @@ public class Season {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public List<Team> getTeams() {

@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SeasonRepository extends JpaRepository<Season, Integer> {
 
-    Season getSeasonByCode(String code);
+    Season findByCode(String code);
+
+    Season findByActive(boolean active);
 }

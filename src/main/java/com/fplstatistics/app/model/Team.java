@@ -1,5 +1,6 @@
 package com.fplstatistics.app.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +13,10 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Column(unique = true)
     private String name;
+
+    @Column(unique = true)
     private String shortName;
 
     public Integer getId() {
