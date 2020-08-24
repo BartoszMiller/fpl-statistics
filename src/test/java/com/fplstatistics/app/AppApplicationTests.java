@@ -89,6 +89,18 @@ class AppApplicationTests {
 
             roundScoreRepository.save(roundScore);
         });
+
+        if (seasonCode.equals("2019-20")) {
+            roundScoreRepository.updateRound(47, 38);
+            roundScoreRepository.updateRound(46, 37);
+            roundScoreRepository.updateRound(45, 36);
+            roundScoreRepository.updateRound(44, 35);
+            roundScoreRepository.updateRound(43, 34);
+            roundScoreRepository.updateRound(42, 33);
+            roundScoreRepository.updateRound(41, 32);
+            roundScoreRepository.updateRound(40, 31);
+            roundScoreRepository.updateRound(39, 30);
+        }
     }
 
     private void createNewSeason(String years) {
