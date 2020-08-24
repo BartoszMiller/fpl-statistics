@@ -66,33 +66,47 @@
             </div>
         </div>
         <hr class="mb-4">
+        <table id="players" class="table table-hover table-responsive">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Player</th>
+                <th scope="col">Cost</th>
+                <th scope="col">Apps</th>
+                <th scope="col">Mins AVG</th>
+                <th scope="col">Pts</th>
+                <th scope="col">Pts per App</th>
+                <th scope="col">Value</th>
+                <th scope="col">Value per app</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${players}">
+                <td>
+                    <div style="display: inline-block">
+                        <img th:src="@{'/shirts/' + ${player.shirtUrl}}" width="30" height="30">
+                    </div>
+                    <div style="display: inline-block">
+                        <div style="display: block">
+                            <span class="name" th:text="${player.lastName}"></span>
+                        </div>
+                        <div style="display: block">
+                            <span class="club" th:text="${player.club}"></span>
+                            <span class="position" th:text="${player.position}"></span>
+                        </div>
+                    </div>
+
+                </td>
+                <td th:text="${player.cost}">Text ...</td>
+                <td th:text="${player.appearances}">Text ...</td>
+                <td th:text="${player.minutesPerAppearance}">Text ...</td>
+                <td th:text="${player.points}">Text ...</td>
+                <td th:text="${player.pointsPerAppearance}">Text ...</td>
+                <td th:text="${player.value}">Text ...</td>
+                <td th:text="${player.valuePerAppearance}">Text ...</td>
+            </tr>
+        </table>
     </form>
 
-    <table id="players" class="table table-hover table-responsive">
-        <thead class="thead-light">
-        <tr>
-            <th scope="col">Player</th>
-            <th scope="col">Cost</th>
-            <th scope="col">Appearances</th>
-            <th scope="col">Minutes per appearance</th>
-            <th scope="col">Points</th>
-            <th scope="col">Points per appearance</th>
-            <th scope="col">Value</th>
-            <th scope="col">Value per appearance</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="player : ${players}">
-            <td th:text="${player.lastName}">Text ...</td>
-            <td th:text="${player.cost}">Text ...</td>
-            <td th:text="${player.appearances}">Text ...</td>
-            <td th:text="${player.minutesPerAppearance}">Text ...</td>
-            <td th:text="${player.points}">Text ...</td>
-            <td th:text="${player.pointsPerAppearance}">Text ...</td>
-            <td th:text="${player.value}">Text ...</td>
-            <td th:text="${player.valuePerAppearance}">Text ...</td>
-        </tr>
-    </table>
 </div>
 
 <script src="webjars/jquery/3.3.1/jquery.min.js"></script>

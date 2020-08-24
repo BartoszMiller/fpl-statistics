@@ -46,5 +46,32 @@ th:first-child, td:first-child {
 }
 
 td:first-child {
-    background-color: grey;
+    background-color: #ffffff;
+}
+
+span.name {
+    font-size: 13px;
+}
+
+span.club {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+span.position {
+    font-size: 12px
+}
+
+td img {
+    margin-right: 10px;
+    vertical-align: inherit;
+}
+
+.table td {
+    padding: 5px;
+}
+
+td.min {
+    width: 1%;
+    white-space: nowrap;
 }
