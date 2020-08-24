@@ -5,6 +5,7 @@ import com.fplstatistics.app.json.DataJson;
 import com.fplstatistics.app.json.PlayerJson;
 import com.fplstatistics.app.json.TeamJson;
 import com.fplstatistics.app.model.Player;
+import com.fplstatistics.app.model.Position;
 import com.fplstatistics.app.model.RoundScore;
 import com.fplstatistics.app.model.Season;
 import com.fplstatistics.app.model.Team;
@@ -82,25 +83,18 @@ class AppApplicationTests {
             roundScore.setKickOff(ZonedDateTime.parse(roundScoreCsv[12]));
             roundScore.setMinutes(Integer.parseInt(roundScoreCsv[13]));
             roundScore.setPoints(Integer.parseInt(roundScoreCsv[25]));
-            roundScore.setRound(Integer.parseInt(roundScoreCsv[19]));
+            roundScore.setRound(seasonCode.equals("2019-20") ? postCovidRound(Integer.parseInt(roundScoreCsv[19])) : Integer.parseInt(roundScoreCsv[19]));
             roundScore.setThreat(Double.parseDouble(roundScoreCsv[24]));
             roundScore.setFirstName(roundScoreCsv[0].substring(0, roundScoreCsv[0].indexOf("_")));
             roundScore.setLastName(roundScoreCsv[0].substring(roundScoreCsv[0].indexOf("_") + 1, roundScoreCsv[0].lastIndexOf("_")));
-
+            roundScore.setPlayer(playerRepository.findByFirstNameAndLastName(roundScore.getFirstName(), roundScore.getLastName()));
+            roundScore.setSeasonRound(Integer.parseInt(seasonCode.replace("-", "") + String.format("%02d", roundScore.getRound())));
             roundScoreRepository.save(roundScore);
         });
+    }
 
-        if (seasonCode.equals("2019-20")) {
-            roundScoreRepository.updateRound(47, 38);
-            roundScoreRepository.updateRound(46, 37);
-            roundScoreRepository.updateRound(45, 36);
-            roundScoreRepository.updateRound(44, 35);
-            roundScoreRepository.updateRound(43, 34);
-            roundScoreRepository.updateRound(42, 33);
-            roundScoreRepository.updateRound(41, 32);
-            roundScoreRepository.updateRound(40, 31);
-            roundScoreRepository.updateRound(39, 30);
-        }
+    private int postCovidRound(int roundPostCovid) {
+        return roundPostCovid > 38 ? roundPostCovid - 9 : roundPostCovid;
     }
 
     private void createNewSeason(String years) {
@@ -156,6 +150,7 @@ class AppApplicationTests {
                 newPlayer.setLastName(playerJson.getSecond_name());
                 newPlayer.setCurrentPrice(((double) playerJson.getNow_cost()) / 10);
                 newPlayer.setCurrentTeam(currentTeam);
+                newPlayer.setCurrentPosition(Position.getPositionByCode(playerJson.getElement_type()).name());
                 playerRepository.save(newPlayer);
 
             } else {

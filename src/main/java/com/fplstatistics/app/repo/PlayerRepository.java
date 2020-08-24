@@ -18,6 +18,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
     @Transactional
     void resetCurrentTeam();
 
+    Player findByFirstNameAndLastName(String firstName, String lastName);
+
     Player findByCode(int code);
 
     List<Player> findByCurrentTeam(Team team);

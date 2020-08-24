@@ -1,20 +1,25 @@
 package com.fplstatistics.app.model;
 
+import java.util.Arrays;
+
 public enum Position {
 
-    GKP("Goalkeeper"),
-    DEF("Defender"),
-    MID("Midfielder"),
-    FWD("Forward");
+    GKP(1),
+    DEF(2),
+    MID(3),
+    FWD(4);
 
-    private final String displayName;
+    private final int code;
 
-    Position(String displayName) {
-        this.displayName = displayName;
+    Position(int code) {
+        this.code = code;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public static Position getPositionByCode(int code) {
+        return Arrays.stream(Position.values())
+                .filter(position -> position.code == code)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No position for code " + code));
     }
 
 }

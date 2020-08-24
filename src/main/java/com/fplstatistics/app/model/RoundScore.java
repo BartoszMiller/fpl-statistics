@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"season_id", "firstName", "lastName", "kickOff"})})
@@ -36,6 +37,7 @@ public class RoundScore {
     private int minutes;
     private int round;
     private int points;
+    private int seasonRound;
     private ZonedDateTime kickOff;
 
     public Integer getId() {
@@ -172,5 +174,25 @@ public class RoundScore {
 
     public void setKickOff(ZonedDateTime kickOff) {
         this.kickOff = kickOff;
+    }
+
+    public int getSeasonRound() {
+        return seasonRound;
+    }
+
+    public void setSeasonRound(int seasonRound) {
+        this.seasonRound = seasonRound;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoundScore that = (RoundScore) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(id);
     }
 }
