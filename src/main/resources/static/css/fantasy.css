@@ -63,15 +63,21 @@ span.position {
 }
 
 td img {
+    margin-left: 5px;
     margin-right: 10px;
-    vertical-align: inherit;
+    vertical-align: middle;
 }
 
 .table td {
     padding: 5px;
+    vertical-align: middle;
 }
 
 td.min {
     width: 1%;
     white-space: nowrap;
+}
+
+thead {
+    font-size: 12px;
 }

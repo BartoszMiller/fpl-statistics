@@ -57,7 +57,7 @@ public class IndexController {
     public List<RoundDto> to() {
         List<RoundDto> from = new ArrayList<>();
         for (int i = 1; i <= 38; i++) {
-            from.add(new RoundDto(i, "Game " + i));
+            from.add(new RoundDto(i, "GW " + i));
         }
         return from;
     }
