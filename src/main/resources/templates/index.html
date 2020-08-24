@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        table {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table td, table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<form id="searchForm" class="needs-validation" novalidate action="#" th:action="@{/statistics}" th:object="${searchForm}" method="get">
+
+    <div class="mb-3">
+        <label for="seasonFrom">Season From</label>
+        <select class="custom-select d-block w-100" id="seasonFrom" th:field="*{seasonFrom}" required>
+            <option th:each="season : ${allSeasons}" th:value="${season.code}" th:text="${season.code}"></option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="roundFrom">Round From</label>
+        <select class="custom-select d-block w-100" id="roundFrom" th:field="*{seasonFrom}" required>
+            <option th:each="round : ${allRounds}" th:value="${round.round}" th:text="${round.label}"></option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="seasonTo">Season To</label>
+        <select class="custom-select d-block w-100" id="seasonTo" th:field="*{seasonTo}" required>
+            <option th:each="season : ${allSeasons}" th:value="${season.code}" th:text="${season.code}"></option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="roundTo">Round To</label>
+        <select class="custom-select d-block w-100" id="roundTo" th:field="*{roundTo}" required>
+            <option th:each="round : ${allRounds}" th:value="${round.round}" th:text="${round.label}"></option>
+        </select>
+    </div>
+</form>
+
+<table id="players">
+    <tr>
+        <th>Player</th>
+        <th>Cost</th>
+        <th>Points</th>
+        <th>Value</th>
+        <th>Appearances</th>
+        <th>Points per appearance</th>
+        <th>Minutes per appearance</th>
+        <th>Value per appearance</th>
+    </tr>
+    <tr th:each="player : ${players}">
+        <td th:text="${player.lastName}">Text ...</td>
+        <td th:text="${player.cost}">Text ...</td>
+        <td th:text="${player.points}">Text ...</td>
+        <td th:text="${player.value}">Text ...</td>
+        <td th:text="${player.appearances}">Text ...</td>
+        <td th:text="${player.pointsPerAppearence}">Text ...</td>
+        <td th:text="${player.minutesPerAppearence}">Text ...</td>
+        <td th:text="${player.valuePerAppearence}">Text ...</td>
+    </tr>
+</table>
+
+</body>

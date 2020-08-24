@@ -2,6 +2,7 @@ package com.fplstatistics.app.api;
 
 import com.fplstatistics.app.model.Player;
 import com.fplstatistics.app.model.RoundScore;
+import com.fplstatistics.app.model.Shirt;
 
 import java.util.List;
 
@@ -9,7 +10,6 @@ public class PlayerDto {
 
     private final Player player;
     private final List<RoundScore> roundScores;
-    private String shirtUrl;
 
     public PlayerDto(Player player, List<RoundScore> roundScores) {
         this.player = player;
@@ -25,11 +25,7 @@ public class PlayerDto {
     }
 
     public String getShirtUrl() {
-        return shirtUrl;
-    }
-
-    public void setShirtUrl(String shirtUrl) {
-        this.shirtUrl = shirtUrl;
+        return Shirt.getShirtByTeamShortName(getClub()).getShirtUrl();
     }
 
     public String getPosition() {
