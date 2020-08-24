@@ -1,89 +1,100 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <style>
-        table {
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
+    <title>Fantasy League Statistics</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
 
-        table td, table th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        table tr:hover {
-            background-color: #ddd;
-        }
-
-        table th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #4CAF50;
-            color: white;
-        }
-    </style>
+    <link href="webjars/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/fantasy.css}" rel="stylesheet">
 </head>
 <body>
 
-<form id="searchForm" class="needs-validation" novalidate action="#" th:action="@{/statistics}" th:object="${searchForm}" method="get">
-
-    <div class="mb-3">
-        <label for="seasonFrom">Season From</label>
-        <select class="custom-select d-block w-100" id="seasonFrom" th:field="*{seasonFrom}" required>
-            <option th:each="season : ${allSeasons}" th:value="${season.code}" th:text="${season.code}"></option>
-        </select>
+<nav class="site-header sticky-top py-1">
+    <div class="container d-flex flex-column flex-md-row justify-content-between">
+        <a class="py-2" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
+                <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
+                <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
+                <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
+                <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
+                <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
+            </svg>
+        </a>
+        <a class="py-2 d-none d-md-inline-block" href="#">Fantasy League Statistics</a>
+        <a class="py-2 d-none d-md-inline-block" href="#">Fantasy Games Summary</a>
+        <a class="py-2 d-none d-md-inline-block" href="#">Fantasy Team Generator (premium)</a>
     </div>
+</nav>
 
-    <div class="mb-3">
-        <label for="roundFrom">Round From</label>
-        <select class="custom-select d-block w-100" id="roundFrom" th:field="*{seasonFrom}" required>
-            <option th:each="round : ${allRounds}" th:value="${round.round}" th:text="${round.label}"></option>
-        </select>
-    </div>
+<div class="container">
 
-    <div class="mb-3">
-        <label for="seasonTo">Season To</label>
-        <select class="custom-select d-block w-100" id="seasonTo" th:field="*{seasonTo}" required>
-            <option th:each="season : ${allSeasons}" th:value="${season.code}" th:text="${season.code}"></option>
-        </select>
-    </div>
+    <h1 class="mt-5">Fantasy League Statistics</h1>
 
-    <div class="mb-3">
-        <label for="roundTo">Round To</label>
-        <select class="custom-select d-block w-100" id="roundTo" th:field="*{roundTo}" required>
-            <option th:each="round : ${allRounds}" th:value="${round.round}" th:text="${round.label}"></option>
-        </select>
-    </div>
-</form>
+    <hr class="mb-4">
 
-<table id="players">
-    <tr>
-        <th>Player</th>
-        <th>Cost</th>
-        <th>Appearances</th>
-        <th>Minutes per appearance</th>
-        <th>Points</th>
-        <th>Points per appearance</th>
-        <th>Value</th>
-        <th>Value per appearance</th>
-    </tr>
-    <tr th:each="player : ${players}">
-        <td th:text="${player.lastName}">Text ...</td>
-        <td th:text="${player.cost}">Text ...</td>
-        <td th:text="${player.appearances}">Text ...</td>
-        <td th:text="${player.minutesPerAppearance}">Text ...</td>
-        <td th:text="${player.points}">Text ...</td>
-        <td th:text="${player.pointsPerAppearance}">Text ...</td>
-        <td th:text="${player.value}">Text ...</td>
-        <td th:text="${player.valuePerAppearance}">Text ...</td>
-    </tr>
-</table>
+    <form id="searchForm" class="needs-validation" novalidate action="#" th:action="@{/statistics}" th:object="${searchForm}" method="get">
 
+        <div class="row">
+            <div class="col-12 col-md-3 mb-3">
+                <label for="seasonFrom">Season From</label>
+                <select class="custom-select d-block w-100" id="seasonFrom" th:field="*{seasonFrom}" required>
+                    <option th:each="season : ${allSeasons}" th:value="${season.code}" th:text="${season.code}"></option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3 mb-3">
+                <label for="roundFrom">Round From</label>
+                <select class="custom-select d-block w-100" id="roundFrom" th:field="*{seasonFrom}" required>
+                    <option th:each="round : ${allRounds}" th:value="${round.round}" th:text="${round.label}"></option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3 mb-3">
+                <label for="seasonTo">Season To</label>
+                <select class="custom-select d-block w-100" id="seasonTo" th:field="*{seasonTo}" required>
+                    <option th:each="season : ${allSeasons}" th:value="${season.code}" th:text="${season.code}"></option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3 mb-3">
+                <label for="roundTo">Round To</label>
+                <select class="custom-select d-block w-100" id="roundTo" th:field="*{roundTo}" required>
+                    <option th:each="round : ${allRounds}" th:value="${round.round}" th:text="${round.label}"></option>
+                </select>
+            </div>
+        </div>
+        <hr class="mb-4">
+    </form>
+
+    <table id="players" class="table table-hover table-responsive">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Player</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Appearances</th>
+            <th scope="col">Minutes per appearance</th>
+            <th scope="col">Points</th>
+            <th scope="col">Points per appearance</th>
+            <th scope="col">Value</th>
+            <th scope="col">Value per appearance</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player : ${players}">
+            <td th:text="${player.lastName}">Text ...</td>
+            <td th:text="${player.cost}">Text ...</td>
+            <td th:text="${player.appearances}">Text ...</td>
+            <td th:text="${player.minutesPerAppearance}">Text ...</td>
+            <td th:text="${player.points}">Text ...</td>
+            <td th:text="${player.pointsPerAppearance}">Text ...</td>
+            <td th:text="${player.value}">Text ...</td>
+            <td th:text="${player.valuePerAppearance}">Text ...</td>
+        </tr>
+    </table>
+</div>
+
+<script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </body>
+</html>
