@@ -67,22 +67,22 @@
     <tr>
         <th>Player</th>
         <th>Cost</th>
-        <th>Points</th>
-        <th>Value</th>
         <th>Appearances</th>
-        <th>Points per appearance</th>
         <th>Minutes per appearance</th>
+        <th>Points</th>
+        <th>Points per appearance</th>
+        <th>Value</th>
         <th>Value per appearance</th>
     </tr>
     <tr th:each="player : ${players}">
         <td th:text="${player.lastName}">Text ...</td>
         <td th:text="${player.cost}">Text ...</td>
-        <td th:text="${player.points}">Text ...</td>
-        <td th:text="${player.value}">Text ...</td>
         <td th:text="${player.appearances}">Text ...</td>
-        <td th:text="${player.pointsPerAppearence}">Text ...</td>
-        <td th:text="${player.minutesPerAppearence}">Text ...</td>
-        <td th:text="${player.valuePerAppearence}">Text ...</td>
+        <td th:text="${player.minutesPerAppearance}">Text ...</td>
+        <td th:text="${player.points}">Text ...</td>
+        <td th:text="${player.pointsPerAppearance}">Text ...</td>
+        <td th:text="${player.value}">Text ...</td>
+        <td th:text="${player.valuePerAppearance}">Text ...</td>
     </tr>
 </table>
 
