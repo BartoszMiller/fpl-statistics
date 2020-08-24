@@ -1,6 +1,6 @@
 package com.fplstatistics.app.api;
 
-import com.fplstatistics.app.model.PlayerStatistics;
+import com.fplstatistics.app.model.RoundScore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +12,7 @@ import java.util.List;
 public class StatisticsResource {
 
     @GetMapping("/statistics")
-    public List<PlayerStatistics> getStatistics(
+    public List<RoundScore> getStatistics(
             @RequestParam("season") String season,
             @RequestParam("from") String from,
             @RequestParam("to") String to,

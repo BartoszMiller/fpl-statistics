@@ -16,6 +16,7 @@ public class Player {
     private int code;
     private String firstName;
     private String lastName;
+    private double currentPrice;
 
     @OneToOne
     private Team currentTeam;
@@ -58,5 +59,13 @@ public class Player {
 
     public void setCurrentTeam(Team currentTeam) {
         this.currentTeam = currentTeam;
+    }
+
+    public double getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(double currentPrice) {
+        this.currentPrice = currentPrice;
     }
 }
