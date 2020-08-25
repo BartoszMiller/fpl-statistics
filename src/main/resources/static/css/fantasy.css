@@ -37,16 +37,26 @@ td, th {
 th {
     background-color: black;
     color: white;
+    text-align: center;
+}
+
+.table td {
+    padding: 5px;
+    vertical-align: middle;
+    font-size: 14px;
+    text-align: center;
 }
 
 th:first-child, td:first-child {
     position: sticky;
     left: 0px;
+    text-align: left;
 
 }
 
 td:first-child {
     background-color: #ffffff;
+    text-align: left;
 }
 
 span.name {
@@ -65,12 +75,7 @@ span.position {
 td img {
     margin-left: 5px;
     margin-right: 10px;
-    vertical-align: middle;
-}
-
-.table td {
-    padding: 5px;
-    vertical-align: middle;
+    vertical-align: inherit;
 }
 
 td.min {

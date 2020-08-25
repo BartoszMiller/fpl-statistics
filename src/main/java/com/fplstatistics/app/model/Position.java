@@ -4,15 +4,25 @@ import java.util.Arrays;
 
 public enum Position {
 
-    GKP(1),
-    DEF(2),
-    MID(3),
-    FWD(4);
+    GKP(1, "Goalkeeper"),
+    DEF(2, "Defender"),
+    MID(3, "Midfielder"),
+    FWD(4, "Forward");
 
     private final int code;
+    private final String positionName;
 
-    Position(int code) {
+    Position(int code, String positionName) {
         this.code = code;
+        this.positionName = positionName;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getPositionName() {
+        return positionName;
     }
 
     public static Position getPositionByCode(int code) {

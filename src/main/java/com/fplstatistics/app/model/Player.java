@@ -15,6 +15,7 @@ public class Player {
     private Integer id;
 
     private int code;
+    private String webName;
     private String firstName;
     private String lastName;
     private double currentPrice;
@@ -38,6 +39,14 @@ public class Player {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getWebName() {
+        return webName;
+    }
+
+    public void setWebName(String webName) {
+        this.webName = webName;
     }
 
     public String getFirstName() {
@@ -93,7 +102,8 @@ public class Player {
         return Objects.hash(id);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return lastName + " " + firstName;
     }
 }

@@ -1,7 +1,9 @@
 package com.fplstatistics.app.api;
 
+import com.fplstatistics.app.model.Position;
 import com.fplstatistics.app.model.Season;
 import com.fplstatistics.app.repo.SeasonRepository;
+import com.fplstatistics.app.repo.TeamRepository;
 import com.fplstatistics.app.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,11 +21,13 @@ public class IndexController {
 
     private final SeasonRepository seasonRepository;
     private final PlayerService playerService;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public IndexController(SeasonRepository seasonRepository, PlayerService playerService) {
+    public IndexController(SeasonRepository seasonRepository, PlayerService playerService, TeamRepository teamRepository) {
         this.seasonRepository = seasonRepository;
         this.playerService = playerService;
+        this.teamRepository = teamRepository;
     }
 
     @GetMapping("/")
@@ -35,6 +39,17 @@ public class IndexController {
     public List<PlayerDto> playerDtos() {
         List<Season> seasons = seasonRepository.findAll();
         return playerService.getPlayers(seasons.get(0).getCode(), seasons.get(seasons.size() - 1).getCode(), 1, 38);
+    }
+
+    @ModelAttribute("teams")
+    public List<TeamDto> teams() {
+        Season season = seasonRepository.findByActive(true);
+        return season.getTeams().stream().map(team -> new TeamDto(team.getName(), team.getShortName())).collect(Collectors.toList());
+    }
+
+    @ModelAttribute("positions")
+    public Position[] positions() {
+        return Position.values();
     }
 
     @ModelAttribute("searchForm")

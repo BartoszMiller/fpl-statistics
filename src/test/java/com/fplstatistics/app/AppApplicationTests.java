@@ -146,6 +146,7 @@ class AppApplicationTests {
             if (player == null) {
                 Player newPlayer = new Player();
                 newPlayer.setCode(playerJson.getCode());
+                newPlayer.setWebName(playerJson.getWeb_name());
                 newPlayer.setFirstName(playerJson.getFirst_name());
                 newPlayer.setLastName(playerJson.getSecond_name());
                 newPlayer.setCurrentPrice(((double) playerJson.getNow_cost()) / 10);

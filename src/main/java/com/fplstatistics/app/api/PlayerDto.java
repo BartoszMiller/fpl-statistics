@@ -16,8 +16,8 @@ public class PlayerDto {
         this.roundScores = roundScores;
     }
 
-    public String getLastName() {
-        return player.getLastName();
+    public String getWebName() {
+        return player.getWebName();
     }
 
     public String getClub() {
