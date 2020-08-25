@@ -1,4 +1,4 @@
-package com.fplstatistics.app.model;
+package com.fplstatistics.app.player;
 
 import com.fplstatistics.app.team.Team;
 

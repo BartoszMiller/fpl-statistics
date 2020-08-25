@@ -1,4 +1,4 @@
-package com.fplstatistics.app.model;
+package com.fplstatistics.app.position;
 
 import java.util.Arrays;
 

@@ -1,8 +1,8 @@
 package com.fplstatistics.app.round;
 
-import com.fplstatistics.app.model.Player;
 import com.fplstatistics.app.season.Season;
 
+import com.fplstatistics.app.player.Player;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

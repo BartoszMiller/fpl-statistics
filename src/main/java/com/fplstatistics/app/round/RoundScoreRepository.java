@@ -1,6 +1,6 @@
 package com.fplstatistics.app.round;
 
-import com.fplstatistics.app.model.Player;
+import com.fplstatistics.app.player.Player;
 import com.fplstatistics.app.season.Season;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

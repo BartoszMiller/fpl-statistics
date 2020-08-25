@@ -1,8 +1,7 @@
-package com.fplstatistics.app.api.dto;
+package com.fplstatistics.app.player;
 
-import com.fplstatistics.app.model.Player;
-import com.fplstatistics.app.round.RoundScore;
 import com.fplstatistics.app.model.Shirt;
+import com.fplstatistics.app.round.RoundScore;
 
 import java.util.List;
 

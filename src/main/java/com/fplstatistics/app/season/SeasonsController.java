@@ -3,6 +3,7 @@ package com.fplstatistics.app.season;
 import com.fplstatistics.app.round.RoundDto;
 import com.fplstatistics.app.round.RoundScoreRepository;
 import com.fplstatistics.app.team.TeamDto;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class SeasonsController {
 
     private final SeasonRepository seasonRepository;
@@ -37,6 +39,6 @@ public class SeasonsController {
     public List<RoundDto> getSeasonRounds(@PathVariable("season-code") String seasonCode) {
         Season season = seasonRepository.findByCode(seasonCode);
         Integer maxRoundBySeason = roundScoreRepository.findMaxRoundBySeason(season).orElse(0);
-        return IntStream.range(1, maxRoundBySeason).mapToObj(i -> new RoundDto(i, "GW " + i)).collect(Collectors.toList());
+        return IntStream.range(1, maxRoundBySeason + 1).mapToObj(i -> new RoundDto(i, "GW " + i)).collect(Collectors.toList());
     }
 }
