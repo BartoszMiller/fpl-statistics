@@ -1,4 +1,4 @@
-package com.fplstatistics.app.api;
+package com.fplstatistics.app.api.dto;
 
 import com.fplstatistics.app.model.Position;
 

@@ -1,4 +1,6 @@
-package com.fplstatistics.app.model;
+package com.fplstatistics.app.season;
+
+import com.fplstatistics.app.team.Team;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

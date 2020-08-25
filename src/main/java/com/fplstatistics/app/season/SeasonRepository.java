@@ -1,7 +1,6 @@
-package com.fplstatistics.app.repo;
+package com.fplstatistics.app.season;
 
 
-import com.fplstatistics.app.model.Season;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

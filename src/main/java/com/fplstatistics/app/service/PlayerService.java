@@ -1,13 +1,13 @@
 package com.fplstatistics.app.service;
 
-import com.fplstatistics.app.api.PlayerDto;
+import com.fplstatistics.app.api.dto.PlayerDto;
 import com.fplstatistics.app.model.Player;
-import com.fplstatistics.app.model.RoundScore;
-import com.fplstatistics.app.model.Season;
-import com.fplstatistics.app.model.Team;
+import com.fplstatistics.app.round.RoundScore;
+import com.fplstatistics.app.season.Season;
+import com.fplstatistics.app.team.Team;
 import com.fplstatistics.app.repo.PlayerRepository;
-import com.fplstatistics.app.repo.RoundScoreRepository;
-import com.fplstatistics.app.repo.SeasonRepository;
+import com.fplstatistics.app.round.RoundScoreRepository;
+import com.fplstatistics.app.season.SeasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

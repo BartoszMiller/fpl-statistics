@@ -1,4 +1,4 @@
-package com.fplstatistics.app.api;
+package com.fplstatistics.app.team;
 
 public class TeamDto {
 

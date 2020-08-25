@@ -1,7 +1,7 @@
-package com.fplstatistics.app.repo;
+package com.fplstatistics.app.round;
 
 import com.fplstatistics.app.model.Player;
-import com.fplstatistics.app.model.RoundScore;
+import com.fplstatistics.app.season.Season;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoundScoreRepository extends JpaRepository<RoundScore, Integer> {
@@ -20,4 +21,7 @@ public interface RoundScoreRepository extends JpaRepository<RoundScore, Integer>
     void updateRound(int before, int after);
 
     List<RoundScore> findBySeasonRoundBetweenAndPlayerIn(int from, int to, Collection<Player> players);
+
+    @Query("select max(rs.round) from RoundScore rs where rs.season = ?1")
+    Optional<Integer> findMaxRoundBySeason(Season season);
 }

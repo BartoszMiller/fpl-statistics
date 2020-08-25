@@ -1,4 +1,4 @@
-package com.fplstatistics.app.model;
+package com.fplstatistics.app.team;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

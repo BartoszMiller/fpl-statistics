@@ -17,6 +17,10 @@ public enum Position {
         this.positionName = positionName;
     }
 
+    public String getName() {
+        return this.name();
+    }
+
     public int getCode() {
         return code;
     }

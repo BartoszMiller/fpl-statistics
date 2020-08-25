@@ -1,6 +1,5 @@
-package com.fplstatistics.app.repo;
+package com.fplstatistics.app.team;
 
-import com.fplstatistics.app.model.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

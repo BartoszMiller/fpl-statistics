@@ -1,5 +1,7 @@
 package com.fplstatistics.app.model;
 
+import com.fplstatistics.app.team.Team;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
