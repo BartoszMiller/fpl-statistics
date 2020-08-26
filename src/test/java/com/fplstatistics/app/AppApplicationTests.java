@@ -59,37 +59,42 @@ class AppApplicationTests {
 
         initTeamsForActiveSeason();
         initPlayersForActiveSeason();
+        exportRoundScoresToDatabase("2016-17");
+        exportRoundScoresToDatabase("2017-18");
         exportRoundScoresToDatabase("2018-19");
         exportRoundScoresToDatabase("2019-20");
     }
 
     private void exportRoundScoresToDatabase(String seasonCode) throws URISyntaxException {
 
-        List<String[]> roundScoresCsv = CsvUtils.readCsvWithoutHeaders(new File(this.getClass().getResource("/merged-gw/" + seasonCode + ".csv").toURI()));
+        System.out.println("Starting export for season " + seasonCode);
+        List<String[]> roundScoresCsv = CsvUtils.readCsvWithoutHeaders(new File(this.getClass().getResource("/generated/" + seasonCode + ".csv").toURI()));
         Season season = seasonRepository.findByCode(seasonCode);
 
         roundScoresCsv.forEach(roundScoreCsv -> {
 
             RoundScore roundScore = new RoundScore();
             roundScore.setSeason(season);
-            roundScore.setAssists(Integer.parseInt(roundScoreCsv[1]));
-            roundScore.setBonus(Integer.parseInt(roundScoreCsv[2]));
-            roundScore.setCleanSheets(Integer.parseInt(roundScoreCsv[4]));
-            roundScore.setCreativity(Double.parseDouble(roundScoreCsv[15]));
-            roundScore.setGoals(Integer.parseInt(roundScoreCsv[9]));
-            roundScore.setIct(Double.parseDouble(roundScoreCsv[10]));
-            roundScore.setInfluence(Double.parseDouble(roundScoreCsv[11]));
-            roundScore.setKickOff(ZonedDateTime.parse(roundScoreCsv[12]));
-            roundScore.setMinutes(Integer.parseInt(roundScoreCsv[13]));
-            roundScore.setPoints(Integer.parseInt(roundScoreCsv[25]));
-            roundScore.setRound(seasonCode.equals("2019-20") ? postCovidRound(Integer.parseInt(roundScoreCsv[19])) : Integer.parseInt(roundScoreCsv[19]));
-            roundScore.setThreat(Double.parseDouble(roundScoreCsv[24]));
-            roundScore.setFirstName(roundScoreCsv[0].substring(0, roundScoreCsv[0].indexOf("_")));
-            roundScore.setLastName(roundScoreCsv[0].substring(roundScoreCsv[0].indexOf("_") + 1, roundScoreCsv[0].lastIndexOf("_")));
+            roundScore.setAssists(Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.ASSISTS.getIndexBySeason(seasonCode)]));
+            roundScore.setBonus(Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.BONUS.getIndexBySeason(seasonCode)]));
+            roundScore.setCleanSheets(Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.CLEAN_SHEETS.getIndexBySeason(seasonCode)]));
+            roundScore.setCreativity(Double.parseDouble(roundScoreCsv[CsvUtils.CSV_INDEX.CREATIVITY.getIndexBySeason(seasonCode)]));
+            roundScore.setGoals(Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.GOALS.getIndexBySeason(seasonCode)]));
+            roundScore.setIct(Double.parseDouble(roundScoreCsv[CsvUtils.CSV_INDEX.ICT.getIndexBySeason(seasonCode)]));
+            roundScore.setInfluence(Double.parseDouble(roundScoreCsv[CsvUtils.CSV_INDEX.INFLUENCE.getIndexBySeason(seasonCode)]));
+            roundScore.setKickOff(ZonedDateTime.parse(roundScoreCsv[CsvUtils.CSV_INDEX.KICK_OFF.getIndexBySeason(seasonCode)]));
+            roundScore.setMinutes(Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.MINUTES.getIndexBySeason(seasonCode)]));
+            roundScore.setPoints(Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.POINTS.getIndexBySeason(seasonCode)]));
+            roundScore.setRound(seasonCode.equals("2019-20") ? postCovidRound(Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.ROUND.getIndexBySeason(seasonCode)])) : Integer.parseInt(roundScoreCsv[CsvUtils.CSV_INDEX.ROUND.getIndexBySeason(seasonCode)]));
+            roundScore.setThreat(Double.parseDouble(roundScoreCsv[CsvUtils.CSV_INDEX.THREAT.getIndexBySeason(seasonCode)]));
+            String[] name = roundScoreCsv[CsvUtils.CSV_INDEX.NAME.getIndexBySeason(seasonCode)].split("_");
+            roundScore.setFirstName(name[0]);
+            roundScore.setLastName(name[1]);
             roundScore.setPlayer(playerRepository.findByFirstNameAndLastName(roundScore.getFirstName(), roundScore.getLastName()));
             roundScore.setSeasonRound(Integer.parseInt(seasonCode.replace("-", "") + String.format("%02d", roundScore.getRound())));
             roundScoreRepository.save(roundScore);
         });
+        System.out.println("Finished export for season " + seasonCode);
     }
 
     private int postCovidRound(int roundPostCovid) {
