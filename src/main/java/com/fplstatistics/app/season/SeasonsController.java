@@ -26,19 +26,18 @@ public class SeasonsController {
 
     @GetMapping("/seasons")
     public List<SeasonDto> getSeasons() {
-        return seasonRepository.findAll().stream().map(season -> new SeasonDto(season.getCode(), season.isActive())).collect(Collectors.toList());
+        return seasonRepository.findAll()
+                .stream()
+                .map(season -> {
+                    Integer maxRoundBySeason = roundScoreRepository.findMaxRoundBySeason(season).orElse(0);
+                    List<RoundDto> rounds = IntStream.range(1, maxRoundBySeason + 1).mapToObj(i -> new RoundDto(i, "GW " + i)).collect(Collectors.toList());
+                    return new SeasonDto(season.getCode(), rounds, season.isActive());
+                }).collect(Collectors.toList());
     }
 
     @GetMapping("/seasons/{season-code}/teams")
     public List<TeamDto> getSeasonTeams(@PathVariable("season-code") String seasonCode) {
         Season season = seasonRepository.findByCode(seasonCode);
         return season.getTeams().stream().map(team -> new TeamDto(team.getName(), team.getShortName())).collect(Collectors.toList());
-    }
-
-    @GetMapping("/seasons/{season-code}/rounds")
-    public List<RoundDto> getSeasonRounds(@PathVariable("season-code") String seasonCode) {
-        Season season = seasonRepository.findByCode(seasonCode);
-        Integer maxRoundBySeason = roundScoreRepository.findMaxRoundBySeason(season).orElse(0);
-        return IntStream.range(1, maxRoundBySeason + 1).mapToObj(i -> new RoundDto(i, "GW " + i)).collect(Collectors.toList());
     }
 }

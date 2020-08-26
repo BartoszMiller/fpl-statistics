@@ -1,10 +1,11 @@
 package com.fplstatistics.app.player;
 
+import com.fplstatistics.app.position.Position;
 import com.fplstatistics.app.round.RoundScore;
-import com.fplstatistics.app.season.Season;
-import com.fplstatistics.app.team.Team;
 import com.fplstatistics.app.round.RoundScoreRepository;
+import com.fplstatistics.app.season.Season;
 import com.fplstatistics.app.season.SeasonRepository;
+import com.fplstatistics.app.team.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +32,17 @@ public class PlayerService {
     public List<PlayerDto> getPlayers(String seasonFrom,
                                       String seasonTo,
                                       Integer roundFrom,
-                                      Integer roundTo) {
+                                      Integer roundTo,
+                                      String teamShortName,
+                                      String positionCode) {
         Season activeSeason = seasonRepository.findByActive(true);
         List<Team> activeTeams = activeSeason.getTeams();
-        List<Player> players = activeTeams.stream().map(playerRepository::findByCurrentTeam).flatMap(Collection::stream).collect(Collectors.toList());
+        List<Player> players = activeTeams.stream()
+                .filter(team -> teamShortName == null || team.getShortName().equals(teamShortName))
+                .map(playerRepository::findByCurrentTeam)
+                .flatMap(Collection::stream)
+                .filter(player -> player.getCurrentPosition().equals(Position.getPositionByCode(positionCode).name()))
+                .collect(Collectors.toList());
 
         int from = Integer.parseInt(seasonFrom.replace("-", "") + String.format("%02d", roundFrom));
         int to = Integer.parseInt(seasonTo.replace("-", "") + String.format("%02d", roundTo));

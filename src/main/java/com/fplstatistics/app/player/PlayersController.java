@@ -24,7 +24,10 @@ public class PlayersController {
             @RequestParam("fromSeason") String fromSeason,
             @RequestParam("toSeason") String toSeason,
             @RequestParam("fromRound") Integer fromRound,
-            @RequestParam("toRound") Integer toRound) {
-        return playerService.getPlayers(fromSeason, toSeason, fromRound, toRound);
+            @RequestParam("toRound") Integer toRound,
+            @RequestParam(value = "team", required = false) String teamShortName,
+            @RequestParam(value = "position", required = false) String positionCode
+    ) {
+        return playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode);
     }
 }

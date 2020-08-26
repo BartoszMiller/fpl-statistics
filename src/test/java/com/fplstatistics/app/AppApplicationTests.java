@@ -151,7 +151,7 @@ class AppApplicationTests {
                 newPlayer.setLastName(playerJson.getSecond_name());
                 newPlayer.setCurrentPrice(((double) playerJson.getNow_cost()) / 10);
                 newPlayer.setCurrentTeam(currentTeam);
-                newPlayer.setCurrentPosition(Position.getPositionByCode(playerJson.getElement_type()).name());
+                newPlayer.setCurrentPosition(Position.getPositionByCode(Integer.toString(playerJson.getElement_type())).name());
                 playerRepository.save(newPlayer);
 
             } else {

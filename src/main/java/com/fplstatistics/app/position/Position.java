@@ -29,9 +29,9 @@ public enum Position {
         return positionName;
     }
 
-    public static Position getPositionByCode(int code) {
+    public static Position getPositionByCode(String code) {
         return Arrays.stream(Position.values())
-                .filter(position -> position.code == code)
+                .filter(position -> code == null || position.code == Integer.parseInt(code))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No position for code " + code));
     }
