@@ -1,7 +1,7 @@
 package com.fplstatistics.app.player;
 
-import com.fplstatistics.app.model.Shirt;
 import com.fplstatistics.app.round.RoundScore;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -24,7 +24,8 @@ public class PlayerDto {
     }
 
     public String getShirtUrl() {
-        return Shirt.getShirtByTeamShortName(getClub()).getShirtUrl();
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path("/shirts/").build()
+                + Shirt.getShirtByTeamShortName(getClub()).getShirtUrl();
     }
 
     public String getPosition() {
