@@ -32,8 +32,8 @@ public class PlayerDto {
         return player.getCurrentPosition();
     }
 
-    public String getCost() {
-        return String.format("%.1f", player.getCurrentPrice());
+    public double getCost() {
+        return player.getCurrentPrice();
     }
 
     public int getPoints() {
@@ -52,23 +52,23 @@ public class PlayerDto {
         }
     }
 
-    public String getPointsPerAppearance() {
+    public double getPointsPerAppearance() {
         if (getAppearances() == 0) {
-            return "0";
+            return 0;
         } else {
-            return String.format("%.2f", (double) getPoints() / getAppearances());
+            return (double) getPoints() / getAppearances();
         }
     }
 
-    public String getValue() {
-        return String.format("%.2f", getPoints() / player.getCurrentPrice());
+    public double getValue() {
+        return getPoints() / player.getCurrentPrice();
     }
 
-    public String getValuePerAppearance() {
+    public double getValuePerAppearance() {
         if (getAppearances() == 0) {
-            return "0";
+            return 0;
         } else {
-            return String.format("%.2f", getPoints() / player.getCurrentPrice() / getAppearances());
+            return getPoints() / player.getCurrentPrice() / getAppearances();
         }
     }
 }
