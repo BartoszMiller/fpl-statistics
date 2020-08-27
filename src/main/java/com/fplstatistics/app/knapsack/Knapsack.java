@@ -39,71 +39,53 @@ public class Knapsack {
 
     private static List<Integer> printKnapsack(int budget, int[] costs, int[] values, int num_items, int playersCount) {
         List<Integer> indexes = new ArrayList<>();
-        int i, w, c;
-        //int[][][] cost_matrix = new int[num_items + 1][budget + 1][playersCount + 1];
-        int[][] cost_matrix = new int[num_items + 1][budget + 1];
+        int i, w, k;
+        int[][][] cost_matrix = new int[num_items + 1][budget + 1][playersCount + 1];
 
         for (i = 0; i <= num_items; i++) {
             for (w = 0; w <= budget; w++) {
-                if (i == 0 || w == 0) {
-                    cost_matrix[i][w] = 0;
-                } else if ((costs[i - 1] <= w)) {
-                    cost_matrix[i][w] = Math.max(
-                            values[i - 1] + cost_matrix[i - 1][w - costs[i - 1]],
-                            cost_matrix[i - 1][w]);
-                } else {
-                    cost_matrix[i][w] = cost_matrix[i - 1][w];
+                for (k = 0; k <= playersCount; k++) {
+                    if (i == 0 || w == 0 || k == 0) {
+                        cost_matrix[i][w][k] = 0;
+                    } else if ((costs[i - 1] <= w)) {
+                        cost_matrix[i][w][k] = Math.max(
+                                values[i - 1] + cost_matrix[i - 1][w - costs[i - 1]][k - 1],
+                                cost_matrix[i - 1][w][k]);
+                    } else {
+                        cost_matrix[i][w][k] = cost_matrix[i - 1][w][k];
+                    }
                 }
             }
         }
-//                for (c = 0; c <= playersCount; c++) {
-//                    if (i == 0 || w == 0 || c == 0) {
-//                        cost_matrix[i][w][c] = 0;
-//                    } else if ((cost[i - 1] <= w) || (c >= 1)) {
-//                        cost_matrix[i][w][c] = Math.max(
-//                                items[i - 1] + cost_matrix[i - 1][w - cost[i - 1]][c - 1],
-//                                cost_matrix[i - 1][w][c]);
-//                    } else {
-//                        cost_matrix[i][w][c] = cost_matrix[i - 1][w][c];
-//                    }
-//                }
-
 
         int bestValue = -1;
         int currentCost = -1;
-        //int currentCount = -1;
-        int[] marked = new int[num_items];
+        int currentCount = -1;
 
         for (w = 0; w < budget + 1; w++) {
-            //for (c = 0; c < playersCount + 1; c++) {
-            int value = cost_matrix[num_items][w];
-            if ((bestValue == -1) || (value > bestValue)) {
-                currentCost = w;
-                bestValue = value;
+            for (k = 0; k < playersCount + 1; k++) {
+                int value = cost_matrix[num_items][w][k];
+                if ((bestValue == -1) || (value > bestValue)) {
+                    currentCost = w;
+                    currentCount = k;
+                    bestValue = value;
+                }
             }
-            //}
         }
 
-        int res = cost_matrix[num_items][currentCost];
+        int res = cost_matrix[num_items][currentCost][currentCount];
 
         w = budget;
+        k = playersCount;
         for (i = num_items; i > 0 && res > 0; i--) {
 
-            // either the result comes from the top
-            // (K[i-1][w]) or from (val[i-1] + K[i-1]
-            // [w-wt[i-1]]) as in Knapsack table. If
-            // it comes from the latter one/ it means
-            // the item is included.
-            if (res == cost_matrix[i - 1][w])
-                continue;
-            else {
+            if (res == cost_matrix[i - 1][w][k]) {
 
-                // This item is included.
+            } else {
                 indexes.add(i - 1);
-                // Since this weight is included its
-                // value is deducted
                 res = res - values[i - 1];
                 w = w - costs[i - 1];
+                k -= 1;
             }
         }
         if (indexes.size() != playersCount) {
@@ -111,18 +93,8 @@ public class Knapsack {
         } else {
             return indexes;
         }
-
-//        while (itemIndex >= 0 && currentCost >= 0) {
-//            if ((itemIndex == 0 && cost_matrix[itemIndex][currentCost] > 0) ||
-//                    ((cost_matrix[itemIndex][currentCost] != cost_matrix[itemIndex - 1][currentCost]))) {
-//                marked[itemIndex] = 1;
-//                currentCost -= costs[itemIndex];
-//            }
-//            itemIndex -= 1;
-//
-//        }
-//        return marked;
     }
+
 
     private static int[] convertToIntArray(double[] value, int multiplier) {
         return Arrays.stream(value).mapToInt(d -> (int) (d * multiplier)).toArray();

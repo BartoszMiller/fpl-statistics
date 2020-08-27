@@ -104,6 +104,45 @@ class KnapsackTest {
     }
 
     @Test
+    void canAffordAll_RespectTeamSizeOfOne() {
+
+        // given
+        int budget = 100;
+
+        List<PlayerDto> players = Knapsack.getDreamTeam(budget, getPlayersStub(), 1).getPlayers();
+
+        assertThat(players.size()).isEqualTo(1);
+        assertThat(players.get(0).getWebName()).isEqualTo("Salah");
+    }
+
+    @Test
+    void canAffordAll_RespectTeamSizeOfTwo() {
+
+        // given
+        int budget = 100;
+
+        List<PlayerDto> players = Knapsack.getDreamTeam(budget, getPlayersStub(), 2).getPlayers();
+
+        assertThat(players.size()).isEqualTo(2);
+        assertThat(players.get(0).getWebName()).isEqualTo("Salah");
+        assertThat(players.get(1).getWebName()).isEqualTo("De Bruyne");
+    }
+
+    @Test
+    void canAffordAll_RespectTeamSizeOfThree() {
+
+        // given
+        int budget = 100;
+
+        List<PlayerDto> players = Knapsack.getDreamTeam(budget, getPlayersStub(), 3).getPlayers();
+
+        assertThat(players.size()).isEqualTo(3);
+        assertThat(players.get(0).getWebName()).isEqualTo("Salah");
+        assertThat(players.get(1).getWebName()).isEqualTo("De Bruyne");
+        assertThat(players.get(2).getWebName()).isEqualTo("Sterling");
+    }
+
+    @Test
     void positiveBudget_canAffordAll_SelectAll() {
 
         // given
@@ -116,7 +155,9 @@ class KnapsackTest {
         return Arrays.asList(
                 playerDto("Sterling", 10.0, 60.0),
                 playerDto("De Bruyne", 20.0, 100.0),
-                playerDto("Salah", 30.0, 120.0));
+                playerDto("Salah", 30.0, 120.0),
+                playerDto("Grosicki", 10.0, 1.0),
+                playerDto("Klich", 30.0, 1.0));
     }
 
     private PlayerDto playerDto(String webName, double price, double value) {
