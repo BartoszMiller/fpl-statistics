@@ -1,6 +1,7 @@
 package com.fplstatistics.app.player;
 
-import com.fplstatistics.app.Knapsack;
+import com.fplstatistics.app.knapsack.DreamTeam;
+import com.fplstatistics.app.knapsack.Knapsack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,6 @@ public class PlayersController {
             @RequestParam(value = "position", required = false) String positionCode) {
 
         List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage);
-        Knapsack.getDreamTeam(100.0, players).forEach(player -> System.out.println(player.getWebName()));
         return returnPlayersSorted(sort, players);
     }
 
