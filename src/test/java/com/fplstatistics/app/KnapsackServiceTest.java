@@ -156,16 +156,16 @@ class DreamTeamServiceTest {
     }
 
     @Test
-    void dreamTeam_respectFormation() {
+    void dreamTeam_respectFormationAndClubs() {
 
         // given
         int budget = 15;
 
-        List<PlayerDto> players = dreamTeamService.getDreamEleven(budget, getPlayersStubRespectFormation(), PlayerDto::getValue).getPlayers();
+        List<PlayerDto> players = dreamTeamService.getDreamEleven(budget, getPlayersStubRespectFormationAndClubLimit(), PlayerDto::getValue).getPlayers();
         List<String> names = players.stream().map(PlayerDto::getWebName).collect(Collectors.toList());
         assertThat(players.size()).isEqualTo(11);
 
-        assertThat(names).contains("Pope", "Zinchenko", "Ake", "Doherty", "Alonso", "Van Dijk", "Mount", "Klich", "Grosicki", "Salah", "Ings");
+        assertThat(names).contains("Pope", "Zinchenko", "Ake", "Doherty", "Alonso", "Robertson", "Mount", "Klich", "Salah", "De Bruyne", "Jimenez");
     }
 
     @Test
@@ -185,64 +185,62 @@ class DreamTeamServiceTest {
 
     private List<PlayerDto> getPlayersStub() {
         return Arrays.asList(
-                playerDto("Sterling", 10.0, 60.0, "MID"),
-                playerDto("De Bruyne", 20.0, 100.0, "MID"),
-                playerDto("Salah", 30.0, 120.0, "MID"),
-                playerDto("Grosicki", 10.0, 1.0, "MID"),
-                playerDto("Klich", 30.0, 1.0, "MID"));
+                playerDto("Sterling", 10.0, 60.0, "MID", "A"),
+                playerDto("De Bruyne", 20.0, 100.0, "MID", "A"),
+                playerDto("Salah", 30.0, 120.0, "MID", "A"),
+                playerDto("Grosicki", 10.0, 1.0, "MID", "B"),
+                playerDto("Klich", 30.0, 1.0, "MID", "B"));
     }
 
     private List<PlayerDto> getDataFor_253_formationBug() {
         return Arrays.asList(
-                playerDto("Pope", 1, 1000, "GKP"),
-
-                playerDto("Robertson", 1, 1000, "DEF"),
-                playerDto("Van Dijk", 1, 1000, "DEF"),
-                playerDto("Alonso", 1, 1, "DEF"),
-
-                playerDto("Sterling", 1, 1000, "MID"),
-                playerDto("De Bruyne", 1, 1000, "MID"),
-                playerDto("Salah", 1, 1000, "MID"),
-                playerDto("Grosicki", 1, 1000, "MID"),
-                playerDto("Klich", 1, 1000, "MID"),
-
-                playerDto("Aguero", 1, 1000, "FWD"),
-                playerDto("Vardy", 1, 1000, "FWD"),
-                playerDto("Martial", 1, 900, "FWD"));
+                playerDto("Pope", 1, 1000, "GKP", "A"),
+                playerDto("Robertson", 1, 1000, "DEF", "A"),
+                playerDto("Van Dijk", 1, 1000, "DEF", "A"),
+                playerDto("Alonso", 1, 1, "DEF", "B"),
+                playerDto("Sterling", 1, 1000, "MID", "B"),
+                playerDto("De Bruyne", 1, 1000, "MID", "B"),
+                playerDto("Salah", 1, 1000, "MID", "C"),
+                playerDto("Grosicki", 1, 1000, "MID", "C"),
+                playerDto("Klich", 1, 1000, "MID", "C"),
+                playerDto("Aguero", 1, 1000, "FWD", "D"),
+                playerDto("Vardy", 1, 1000, "FWD", "D"),
+                playerDto("Martial", 1, 900, "FWD", "D"));
     }
 
-    private List<PlayerDto> getPlayersStubRespectFormation() {
+    private List<PlayerDto> getPlayersStubRespectFormationAndClubLimit() {
         return Arrays.asList(
-                playerDto("Dubravka", 1, 1001, "GKP"),
-                playerDto("Pope", 1, 1002, "GKP"),
+                playerDto("Pope", 1, 1002, "GKP", "A"),
+                playerDto("Dubravka", 1, 1001, "GKP", "A"),
 
-                playerDto("Robertson", 1, 500, "DEF"),
-                playerDto("Van Dijk", 1, 501, "DEF"),
-                playerDto("Alonso", 1, 502, "DEF"),
-                playerDto("Doherty", 1, 503, "DEF"),
-                playerDto("Ake", 1, 504, "DEF"),
-                playerDto("Zinchenko", 1, 505, "DEF"),
+                playerDto("Zinchenko", 1, 505, "DEF", "A"),
+                playerDto("Ake", 1, 504, "DEF", "B"),
+                playerDto("Doherty", 1, 503, "DEF", "B"),
+                playerDto("Alonso", 1, 502, "DEF", "B"),
+                playerDto("Van Dijk", 1, 501, "DEF", "B"),
+                playerDto("Robertson", 1, 500, "DEF", "C"),
 
-                playerDto("Sterling", 1, 101, "MID"),
-                playerDto("De Bruyne", 1, 102, "MID"),
-                playerDto("Salah", 1, 103, "MID"),
-                playerDto("Grosicki", 1, 104, "MID"),
-                playerDto("Klich", 1, 105, "MID"),
-                playerDto("Mount", 1, 106, "MID"),
+                playerDto("Mount", 1, 106, "MID", "C"),
+                playerDto("Klich", 1, 105, "MID", "C"),
+                playerDto("Grosicki", 1, 104, "MID", "C"),
+                playerDto("Salah", 1, 103, "MID", "D"),
+                playerDto("De Bruyne", 1, 102, "MID", "D"),
+                playerDto("Sterling", 1, 101, "MID", "D"),
 
-                playerDto("Aguero", 1, 1, "FWD"),
-                playerDto("Vardy", 1, 2, "FWD"),
-                playerDto("Martial", 1, 3, "FWD"),
-                playerDto("Jimenez", 1, 4, "FWD"),
-                playerDto("Ings", 1, 5, "FWD"));
+                playerDto("Ings", 1, 5, "FWD", "C"),
+                playerDto("Jimenez", 1, 4, "FWD", "D"),
+                playerDto("Martial", 1, 3, "FWD", "D"),
+                playerDto("Vardy", 1, 2, "FWD", "D"),
+                playerDto("Aguero", 1, 1, "FWD", "D"));
     }
 
-    private PlayerDto playerDto(String webName, double price, double value, String position) {
+    private PlayerDto playerDto(String webName, double price, double value, String position, String club) {
         PlayerDto playerDto = mock(PlayerDto.class);
         when(playerDto.getWebName()).thenReturn(webName);
         when(playerDto.getCost()).thenReturn(price);
         when(playerDto.getValue()).thenReturn(value);
         when(playerDto.getPosition()).thenReturn(position);
+        when(playerDto.getClub()).thenReturn(club);
         return playerDto;
     }
 }
