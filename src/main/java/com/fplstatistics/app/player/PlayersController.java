@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -35,6 +36,15 @@ public class PlayersController {
             @RequestParam(value = "position", required = false) String positionCode) {
 
         List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage);
+
+        DreamTeam dreamTeam = Knapsack.getDreamTeam(100, players, 11);
+        System.out.println("Team price: " + dreamTeam.getTeamPrice());
+        System.out.println("Total points: " + dreamTeam.getTotalPoints());
+        System.out.println("Total value: " + dreamTeam.getTeamValue());
+        IntStream.range(0, 11).boxed().map(i -> {
+            System.out.print(i + 1 + ". ");
+            return dreamTeam.getPlayers().get(i);
+        }).forEach(p -> System.out.println(p.getPosition() + " " + p.getWebName() + " " + p.getCost() + " " + p.getClub() + " " + p.getAppearances()));
         return returnPlayersSorted(sort, players);
     }
 

@@ -2,11 +2,13 @@ package com.fplstatistics.app;
 
 import com.fplstatistics.app.knapsack.Knapsack;
 import com.fplstatistics.app.player.PlayerDto;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -151,20 +153,60 @@ class KnapsackTest {
         assertThat(Knapsack.getDreamTeam(budget, getPlayersStub(), 3).getPlayers().size()).isEqualTo(3);
     }
 
-    private List<PlayerDto> getPlayersStub() {
-        return Arrays.asList(
-                playerDto("Sterling", 10.0, 60.0),
-                playerDto("De Bruyne", 20.0, 100.0),
-                playerDto("Salah", 30.0, 120.0),
-                playerDto("Grosicki", 10.0, 1.0),
-                playerDto("Klich", 30.0, 1.0));
+    @Test
+    void teamTest() {
+
+        // given
+        int budget = 100;
+
+        List<PlayerDto> players = Knapsack.getDreamTeam(budget, getPlayersStubRespectFormation(), 11).getPlayers();
+        List<String> names = players.stream().map(PlayerDto::getWebName).collect(Collectors.toList());
+        assertThat(players.size()).isEqualTo(11);
+
+        assertThat(names).contains("Dubravka", "Ings", "Jimenez", "Martial", "Sterling", "De Bruyne", "Salah", "Grosicki", "Robertson", "Van Dijk", "Alonso");
     }
 
-    private PlayerDto playerDto(String webName, double price, double value) {
+    private List<PlayerDto> getPlayersStub() {
+        return Arrays.asList(
+                playerDto("Sterling", 10.0, 60.0, "MID"),
+                playerDto("De Bruyne", 20.0, 100.0, "MID"),
+                playerDto("Salah", 30.0, 120.0, "MID"),
+                playerDto("Grosicki", 10.0, 1.0, "MID"),
+                playerDto("Klich", 30.0, 1.0, "MID"));
+    }
+
+    private List<PlayerDto> getPlayersStubRespectFormation() {
+        return Arrays.asList(
+                playerDto("Dubravka", 1, 1000.0, "GKP"),
+                playerDto("Pope", 1, 10.0, "GKP"),
+
+                playerDto("Robertson", 1, 2000.0, "DEF"),
+                playerDto("Van Dijk", 1, 2000.0, "DEF"),
+                playerDto("Alonso", 1, 2000.0, "DEF"),
+                playerDto("Doherty", 1, 2000.0, "DEF"),
+                playerDto("Ake", 1, 2000.0, "DEF"),
+                playerDto("Zinchenko", 1, 2000.0, "DEF"),
+
+                playerDto("Sterling", 1, 1000.0, "MID"),
+                playerDto("De Bruyne", 1, 1000.0, "MID"),
+                playerDto("Salah", 1, 1000.0, "MID"),
+                playerDto("Grosicki", 1, 1000.0, "MID"),
+                playerDto("Klich", 1, 10.0, "MID"),
+                playerDto("Mount", 1, 10.0, "MID"),
+
+                playerDto("Aguero", 1, 1000.0, "FWD"),
+                playerDto("Vardy", 1, 1000.0, "FWD"),
+                playerDto("Martial", 1, 10.0, "FWD"),
+                playerDto("Jimenez", 1, 10.0, "FWD"),
+                playerDto("Ings", 1, 10.0, "FWD"));
+    }
+
+    private PlayerDto playerDto(String webName, double price, double value, String position) {
         PlayerDto playerDto = mock(PlayerDto.class);
         when(playerDto.getWebName()).thenReturn(webName);
         when(playerDto.getCost()).thenReturn(price);
         when(playerDto.getValue()).thenReturn(value);
+        when(playerDto.getPosition()).thenReturn(position);
         return playerDto;
     }
 }
