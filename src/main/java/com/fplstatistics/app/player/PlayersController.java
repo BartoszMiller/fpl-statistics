@@ -1,7 +1,7 @@
 package com.fplstatistics.app.player;
 
 import com.fplstatistics.app.knapsack.DreamTeam;
-import com.fplstatistics.app.knapsack.Knapsack;
+import com.fplstatistics.app.knapsack.DreamTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +18,12 @@ import java.util.stream.IntStream;
 public class PlayersController {
 
     private final PlayerService playerService;
+    private final DreamTeamService dreamTeamService;
 
     @Autowired
-    public PlayersController(PlayerService playerService) {
+    public PlayersController(PlayerService playerService, DreamTeamService dreamTeamService) {
         this.playerService = playerService;
+        this.dreamTeamService = dreamTeamService;
     }
 
     @GetMapping("/players")
@@ -37,14 +39,14 @@ public class PlayersController {
 
         List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage);
 
-        DreamTeam dreamTeam = Knapsack.getDreamTeam(100, players, 11);
+        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(83, players, PlayerDto::getPoints);
         System.out.println("Team price: " + dreamTeam.getTeamPrice());
         System.out.println("Total points: " + dreamTeam.getTotalPoints());
         System.out.println("Total value: " + dreamTeam.getTeamValue());
         IntStream.range(0, 11).boxed().map(i -> {
             System.out.print(i + 1 + ". ");
             return dreamTeam.getPlayers().get(i);
-        }).forEach(p -> System.out.println(p.getPosition() + " " + p.getWebName() + " " + p.getCost() + " " + p.getClub() + " " + p.getAppearances()));
+        }).forEach(p -> System.out.println(p.getPosition() + " " + p    .getWebName() + " " + p.getCost() + " " + p.getClub() + " " + p.getAppearances()+ " " + p.getPoints()));
         return returnPlayersSorted(sort, players);
     }
 
