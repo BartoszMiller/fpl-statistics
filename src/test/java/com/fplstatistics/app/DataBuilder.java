@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-class AppApplicationTests {
+class DataBuilder {
 
     @Autowired
     private SeasonRepository seasonRepository;

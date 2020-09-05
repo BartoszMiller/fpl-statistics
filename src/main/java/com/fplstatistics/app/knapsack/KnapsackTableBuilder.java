@@ -16,31 +16,6 @@ public class KnapsackTableBuilder {
     private static final int COST_MULTIPLIER = 10;
     private static final int VALUE_MULTIPLIER = 100;
 
-    public int[][] buildTable(int maxWeight, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
-
-        maxWeight *= COST_MULTIPLIER;
-        int[] weights = getWeightsFromPlayers(players);
-        int[] values = getValuesFromPlayers(players, valueFunction);
-
-        int numberOfItems = weights.length;
-        int[][] table = new int[numberOfItems + 1][maxWeight + 1];
-
-        for (int n = 0; n <= numberOfItems; n++) {
-            for (int w = 0; w <= maxWeight; w++) {
-                if (n == 0 || w == 0) {
-                    table[n][w] = 0;
-                } else if (weights[n - 1] <= w) {
-                    table[n][w] = Math.max(
-                            table[n - 1][w],
-                            table[n - 1][w - weights[n - 1]] + values[n - 1]);
-                } else {
-                    table[n][w] = table[n - 1][w];
-                }
-            }
-        }
-        return table;
-    }
-
     public int[][][] buildTable(int maxWeight, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
 
         maxWeight *= COST_MULTIPLIER;
@@ -68,39 +43,22 @@ public class KnapsackTableBuilder {
         return table;
     }
 
-    public List<PlayerDto> getSelectedPlayers(int[][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
-
-        int[] weights = getWeightsFromPlayers(players);
-        int[] values = getValuesFromPlayers(players, valueFunction);
-
-        int result = table[table.length - 1][table[0].length - 1];
-        int w = table[0].length - 1;
-        List<Integer> indexes = new ArrayList<>();
-
-        for (int n = table.length - 1; n > 0 && result > 0; n--) {
-
-            // either the result comes from the top (K[i-1][w]) if so, then item not included
-            // otherwise, included
-            if (result != table[n - 1][w]) {
-                result = result - values[n - 1];
-                w = w - weights[n - 1];
-                indexes.add(n - 1);
-            }
-        }
-        return indexes.stream().map(players::get).collect(Collectors.toList());
+    public List<PlayerDto> getPlayersForBestCell(int[][][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+        return traversePlayersInTable(table, table.length - 1, table[0].length - 1, table[0][0].length - 1, players, valueFunction);
     }
 
-    public List<PlayerDto> getSelectedPlayers(int[][][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+    public List<PlayerDto> getPlayersForAnyCell(int[][][] table, int n, int w, int k, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+        return traversePlayersInTable(table, n, w, k, players, valueFunction);
+    }
 
+    private List<PlayerDto> traversePlayersInTable(int[][][] table, int n, int w, int k, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
         int[] weights = getWeightsFromPlayers(players);
         int[] values = getValuesFromPlayers(players, valueFunction);
 
-        int result = table[table.length - 1][table[0].length - 1][table[0][0].length - 1];
-        int w = table[0].length - 1;
-        int k = table[0][0].length - 1;
+        int result = table[n][w][k];
         List<Integer> indexes = new ArrayList<>();
 
-        for (int n = table.length - 1; n > 0 && result > 0; n--) {
+        for (; n > 0 && result > 0; n--) {
 
             // either the result comes from the top (K[i-1][w][k]) if so, then item not included
             // otherwise, included

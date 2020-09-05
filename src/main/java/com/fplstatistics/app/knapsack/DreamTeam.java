@@ -3,6 +3,7 @@ package com.fplstatistics.app.knapsack;
 import com.fplstatistics.app.player.PlayerDto;
 import com.fplstatistics.app.position.Position;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,15 @@ public class DreamTeam {
     public DreamTeam(List<PlayerDto> players) {
         players.sort(Comparator.comparingInt(o -> Position.valueOf(o.getPosition()).getCode()));
         this.players = players;
+    }
+
+    public DreamTeam(List<PlayerDto> goalkeepers, List<PlayerDto> defenders, List<PlayerDto> midfielders, List<PlayerDto> forwards) {
+        players = new ArrayList<>();
+        players.addAll(goalkeepers);
+        players.addAll(defenders);
+        players.addAll(midfielders);
+        players.addAll(forwards);
+        players.sort(Comparator.comparingInt(o -> Position.valueOf(o.getPosition()).getCode()));
     }
 
     public List<PlayerDto> getPlayers() {

@@ -21,18 +21,18 @@ class KnapsackTableBuilderTest {
 
     @ParameterizedTest
     @MethodSource("comparators")
-    void exampleFromYoutube_zeroBudget_noPlayersCount(Comparator<PlayerDto> comparator) {
+    void exampleFromYoutube_zeroBudget(Comparator<PlayerDto> comparator) {
 
         // given
         List<PlayerDto> players = getSimplePlayers();
         players.sort(comparator);
 
         // when
-        int[][] table = builder.buildTable(0, players, PlayerDto::getValue);
-        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        int[][][] table = builder.buildTable(0, players, 2, PlayerDto::getValue);
+        List<String> mapToNames = mapToNames(builder.getPlayersForBestCell(table, players, PlayerDto::getValue));
 
         // then
-        assertThat(table[table.length - 1][table[0].length - 1]).isEqualTo(0);
+        assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(0);
         assertThat(mapToNames).containsExactlyInAnyOrder();
     }
 
@@ -45,11 +45,11 @@ class KnapsackTableBuilderTest {
         players.sort(comparator);
 
         // when
-        int[][] table = builder.buildTable(5, players, PlayerDto::getValue);
-        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        int[][][] table = builder.buildTable(5, players, 2, PlayerDto::getValue);
+        List<String> mapToNames = mapToNames(builder.getPlayersForBestCell(table, players, PlayerDto::getValue));
 
         // then
-        assertThat(table[table.length - 1][table[0].length - 1]).isEqualTo(800);
+        assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(800);
         assertThat(mapToNames).containsExactlyInAnyOrder("Grosicki", "De Bruyne");
     }
 
@@ -62,11 +62,11 @@ class KnapsackTableBuilderTest {
         players.sort(comparator);
 
         // when
-        int[][] table = builder.buildTable(14, players, PlayerDto::getValue);
-        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        int[][][] table = builder.buildTable(14, players, 4, PlayerDto::getValue);
+        List<String> mapToNames = mapToNames(builder.getPlayersForBestCell(table, players, PlayerDto::getValue));
 
         // then
-        assertThat(table[table.length - 1][table[0].length - 1]).isEqualTo(2100);
+        assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(2100);
         assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
     }
 
@@ -80,7 +80,7 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(5, players, 2, PlayerDto::getValue);
-        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getPlayersForBestCell(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(800);
@@ -97,7 +97,7 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(5, players, 4, PlayerDto::getValue);
-        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getPlayersForBestCell(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(800);
@@ -114,7 +114,7 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(14, players, 2, PlayerDto::getValue);
-        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getPlayersForBestCell(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(1300);
@@ -131,7 +131,7 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(14, players, 4, PlayerDto::getValue);
-        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getPlayersForBestCell(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(2100);
