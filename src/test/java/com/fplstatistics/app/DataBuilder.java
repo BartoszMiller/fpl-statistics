@@ -65,6 +65,12 @@ class DataBuilder {
         exportRoundScoresToDatabase("2019-20");
     }
 
+
+    @Test
+    void updatePlayers() throws IOException {
+        initPlayersForActiveSeason();
+    }
+
     private void exportRoundScoresToDatabase(String seasonCode) throws URISyntaxException {
 
         System.out.println("Starting export for season " + seasonCode);
@@ -134,8 +140,6 @@ class DataBuilder {
     }
 
     private void initPlayersForActiveSeason() throws IOException {
-
-        playerRepository.resetCurrentTeam();
 
         Season activeSeason = seasonRepository.findByActive(true);
         DataJson dataJson = objectMapper.readValue(this.getClass().getResourceAsStream("/api-data/" + activeSeason.getCode() + ".json"), DataJson.class);
