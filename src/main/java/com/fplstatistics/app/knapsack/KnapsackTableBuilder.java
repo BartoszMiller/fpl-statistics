@@ -13,8 +13,8 @@ import java.util.stream.IntStream;
 @Service
 public class KnapsackTableBuilder {
 
-    private static final int COST_MULTIPLIER = 1;
-    private static final int VALUE_MULTIPLIER = 1;
+    private static final int COST_MULTIPLIER = 10;
+    private static final int VALUE_MULTIPLIER = 100;
 
     int[][] buildTable(int maxWeight, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
 
@@ -35,6 +35,33 @@ public class KnapsackTableBuilder {
                             table[n - 1][w - weights[n - 1]] + values[n - 1]);
                 } else {
                     table[n][w] = table[n - 1][w];
+                }
+            }
+        }
+        return table;
+    }
+
+    int[][][] buildTable(int maxWeight, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
+
+        maxWeight *= COST_MULTIPLIER;
+        int[] weights = getWeightsFromPlayers(players);
+        int[] values = getValuesFromPlayers(players, valueFunction);
+
+        int numberOfItems = weights.length;
+        int[][][] table = new int[numberOfItems + 1][maxWeight + 1][playersCount + 1];
+
+        for (int n = 0; n <= numberOfItems; n++) {
+            for (int w = 0; w <= maxWeight; w++) {
+                for (int k = 0; k <= playersCount; k++) {
+                    if (n == 0 || w == 0 || k == 0) {
+                        table[n][w][k] = 0;
+                    } else if (weights[n - 1] <= w) {
+                        table[n][w][k] = Math.max(
+                                table[n - 1][w][k],
+                                table[n - 1][w - weights[n - 1]][k - 1] + values[n - 1]);
+                    } else {
+                        table[n][w][k] = table[n - 1][w][k];
+                    }
                 }
             }
         }

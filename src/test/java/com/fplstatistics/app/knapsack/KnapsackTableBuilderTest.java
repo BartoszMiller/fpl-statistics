@@ -21,7 +21,7 @@ class KnapsackTableBuilderTest {
 
     @ParameterizedTest
     @MethodSource("comparators")
-    void exampleFromYoutube_zeroBudget(Comparator<PlayerDto> comparator) {
+    void exampleFromYoutube_zeroBudget_noPlayersCount(Comparator<PlayerDto> comparator) {
 
         // given
         List<PlayerDto> players = getSimplePlayers();
@@ -38,7 +38,7 @@ class KnapsackTableBuilderTest {
 
     @ParameterizedTest
     @MethodSource("comparators")
-    void exampleFromYoutube_canAffordTwo(Comparator<PlayerDto> comparator) {
+    void exampleFromYoutube_canAffordTwo_noPlayersCount(Comparator<PlayerDto> comparator) {
 
         // given
         List<PlayerDto> players = getSimplePlayers();
@@ -49,13 +49,13 @@ class KnapsackTableBuilderTest {
         List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
 
         // then
-        assertThat(table[table.length - 1][table[0].length - 1]).isEqualTo(8);
+        assertThat(table[table.length - 1][table[0].length - 1]).isEqualTo(800);
         assertThat(mapToNames).containsExactlyInAnyOrder("Grosicki", "De Bruyne");
     }
 
     @ParameterizedTest
     @MethodSource("comparators")
-    void exampleFromYoutube_canAffordAll(Comparator<PlayerDto> comparator) {
+    void exampleFromYoutube_canAffordAll_noPlayersCount(Comparator<PlayerDto> comparator) {
 
         // given
         List<PlayerDto> players = getSimplePlayers();
@@ -66,8 +66,76 @@ class KnapsackTableBuilderTest {
         List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
 
         // then
-        assertThat(table[table.length - 1][table[0].length - 1]).isEqualTo(21);
+        assertThat(table[table.length - 1][table[0].length - 1]).isEqualTo(2100);
         assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+    }
+
+    @ParameterizedTest
+    @MethodSource("comparators")
+    void exampleFromYoutube_canAffordTwo_2players(Comparator<PlayerDto> comparator) {
+
+        // given
+        List<PlayerDto> players = getSimplePlayers();
+        players.sort(comparator);
+
+        // when
+        int[][][] table = builder.buildTable(5, players, 2, PlayerDto::getValue);
+        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+
+        // then
+        assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(800);
+        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+    }
+
+    @ParameterizedTest
+    @MethodSource("comparators")
+    void exampleFromYoutube_canAffordTwo_4players(Comparator<PlayerDto> comparator) {
+
+        // given
+        List<PlayerDto> players = getSimplePlayers();
+        players.sort(comparator);
+
+        // when
+        int[][][] table = builder.buildTable(5, players, 4, PlayerDto::getValue);
+        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+
+        // then
+        assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(800);
+        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+    }
+
+    @ParameterizedTest
+    @MethodSource("comparators")
+    void exampleFromYoutube_canAffordAll_2players(Comparator<PlayerDto> comparator) {
+
+        // given
+        List<PlayerDto> players = getSimplePlayers();
+        players.sort(comparator);
+
+        // when
+        int[][][] table = builder.buildTable(14, players, 2, PlayerDto::getValue);
+        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+
+        // then
+        assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(1300);
+        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+    }
+
+    @ParameterizedTest
+    @MethodSource("comparators")
+    void exampleFromYoutube_canAffordAll_4players(Comparator<PlayerDto> comparator) {
+
+        // given
+        List<PlayerDto> players = getSimplePlayers();
+        players.sort(comparator);
+
+        // when
+        int[][][] table = builder.buildTable(14, players, 4, PlayerDto::getValue);
+        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+
+        // then
+        assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(2100);
+        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
     }
 
     private static List<PlayerDto> getSimplePlayers() {
