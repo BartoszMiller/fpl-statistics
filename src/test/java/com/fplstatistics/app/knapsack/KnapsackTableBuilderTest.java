@@ -80,11 +80,11 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(5, players, 2, PlayerDto::getValue);
-        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(800);
-        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+        assertThat(mapToNames).containsExactlyInAnyOrder("Grosicki", "De Bruyne");
     }
 
     @ParameterizedTest
@@ -97,11 +97,11 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(5, players, 4, PlayerDto::getValue);
-        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(800);
-        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+        assertThat(mapToNames).containsExactlyInAnyOrder("Grosicki", "De Bruyne");
     }
 
     @ParameterizedTest
@@ -114,11 +114,11 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(14, players, 2, PlayerDto::getValue);
-        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(1300);
-        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+        assertThat(mapToNames).containsExactlyInAnyOrder("Salah", "Sterling");
     }
 
     @ParameterizedTest
@@ -131,11 +131,11 @@ class KnapsackTableBuilderTest {
 
         // when
         int[][][] table = builder.buildTable(14, players, 4, PlayerDto::getValue);
-        // List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
+        List<String> mapToNames = mapToNames(builder.getSelectedPlayers(table, players, PlayerDto::getValue));
 
         // then
         assertThat(table[table.length - 1][table[0].length - 1][table[0][0].length - 1]).isEqualTo(2100);
-        //assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
+        assertThat(mapToNames).containsExactlyInAnyOrder("Sterling", "Salah", "Grosicki", "De Bruyne");
     }
 
     private static List<PlayerDto> getSimplePlayers() {
@@ -150,9 +150,9 @@ class KnapsackTableBuilderTest {
     private static Stream<Arguments> comparators() {
         return Stream.of(
                 Arguments.of(Comparator.comparingDouble(PlayerDto::getValue)),
+                Arguments.of(Comparator.comparingDouble(PlayerDto::getValue).reversed()),
                 Arguments.of(Comparator.comparingDouble(PlayerDto::getPoints)),
                 Arguments.of(Comparator.comparingDouble(PlayerDto::getPoints).reversed()),
-                Arguments.of(Comparator.comparingDouble(PlayerDto::getValue).reversed()),
                 Arguments.of(Comparator.comparingDouble(PlayerDto::getCost)),
                 Arguments.of(Comparator.comparingDouble(PlayerDto::getCost).reversed()),
                 Arguments.of(Comparator.comparing(PlayerDto::getWebName)),

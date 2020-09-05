@@ -90,6 +90,30 @@ public class KnapsackTableBuilder {
         return indexes.stream().map(players::get).collect(Collectors.toList());
     }
 
+    List<PlayerDto> getSelectedPlayers(int[][][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+
+        int[] weights = getWeightsFromPlayers(players);
+        int[] values = getValuesFromPlayers(players, valueFunction);
+
+        int result = table[table.length - 1][table[0].length - 1][table[0][0].length - 1];
+        int w = table[0].length - 1;
+        int k = table[0][0].length - 1;
+        List<Integer> indexes = new ArrayList<>();
+
+        for (int n = table.length - 1; n > 0 && result > 0; n--) {
+
+            // either the result comes from the top (K[i-1][w][k]) if so, then item not included
+            // otherwise, included
+            if (result != table[n - 1][w][k]) {
+                result = result - values[n - 1];
+                w = w - weights[n - 1];
+                k -= 1;
+                indexes.add(n - 1);
+            }
+        }
+        return indexes.stream().map(players::get).collect(Collectors.toList());
+    }
+
     private int[] getWeightsFromPlayers(List<PlayerDto> players) {
         double[] weights = new double[players.size()];
         IntStream.range(0, players.size()).forEach(i -> weights[i] = players.get(i).getCost());
