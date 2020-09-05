@@ -2,137 +2,145 @@ package com.fplstatistics.app.knapsack;
 
 import com.fplstatistics.app.player.PlayerDto;
 import com.fplstatistics.app.position.Position;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class DreamTeamService {
 
+    private final KnapsackTableBuilder knapsackTableBuilder;
+
+    @Autowired
+    public DreamTeamService(KnapsackTableBuilder knapsackTableBuilder) {
+        this.knapsackTableBuilder = knapsackTableBuilder;
+    }
+
     public DreamTeam getBestPlayers(double budget, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
-        return knapsack(budget, players, playersCount, false, valueFunction);
+        int[][][] table = knapsackTableBuilder.buildTable(budget, players, playersCount, valueFunction);
+        List<PlayerDto> playersForBestCell = knapsackTableBuilder.getPlayersForBestCell(table, players, PlayerDto::getValue);
+        return new DreamTeam(playersForBestCell);
     }
 
     public DreamTeam getDreamEleven(double budget, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
-        return knapsack(budget, players, 11, true, valueFunction);
-    }
 
-    private DreamTeam knapsack(double budget, List<PlayerDto> players, int playersCount, boolean validateFormation, ToDoubleFunction<PlayerDto> valueFunction) {
+        List<PlayerDto> allGoalkeepers = players.stream().filter(p -> p.getPosition().equals(Position.GKP.name())).collect(Collectors.toList());
+        List<PlayerDto> allDefenders = players.stream().filter(p -> p.getPosition().equals(Position.DEF.name())).collect(Collectors.toList());
+        List<PlayerDto> allMidfielders = players.stream().filter(p -> p.getPosition().equals(Position.MID.name())).collect(Collectors.toList());
+        List<PlayerDto> allForwards = players.stream().filter(p -> p.getPosition().equals(Position.FWD.name())).collect(Collectors.toList());
 
-        int costMultiplier = 10;
-        int valueMultiplier = 100;
+        int[][][] gkpTable = knapsackTableBuilder.buildTable(budget, allGoalkeepers, 1, valueFunction);
+        int[][][] defTable = knapsackTableBuilder.buildTable(budget, allDefenders, 5, valueFunction);
+        int[][][] midTable = knapsackTableBuilder.buildTable(budget, allMidfielders, 5, valueFunction);
+        int[][][] fwdTable = knapsackTableBuilder.buildTable(budget, allForwards, 3, valueFunction);
 
-        int totalPlayers = players.size();
-        double[] costs = new double[players.size()];
-        double[] values = new double[players.size()];
-        int[] positions = new int[players.size()];
-        String[] clubs = new String[players.size()];
+        int best = 0;
 
-        IntStream.range(0, players.size()).forEach(i -> {
-            costs[i] = players.get(i).getCost();
-            values[i] = valueFunction.applyAsDouble(players.get(i));
-            positions[i] = Position.valueOf(players.get(i).getPosition()).getCode();
-            clubs[i] = players.get(i).getClub();
-        });
+        int gkpW = 0;
+        int gkpK = 0;
+        int defW = 0;
+        int defK = 0;
+        int midW = 0;
+        int midK = 0;
+        int fwdW = 0;
+        int fwdK = 0;
 
-        int[] wt = convertToIntArray(costs, costMultiplier);
-        int[] val = convertToIntArray(values, valueMultiplier);
+        for (double gkpBudget = 20; gkpBudget > 0; gkpBudget -= 0.5) {
+            for (double defBudget = 40; defBudget > 0; defBudget -= 0.5) {
+                for (double midBudget = 60; midBudget > 0; midBudget -= 0.5) {
+                    for (double fwdBudget = 40; fwdBudget > 0; fwdBudget -= 0.5) {
+                        if (gkpBudget + defBudget + midBudget + fwdBudget == budget) {
 
-        List<Integer> indexes = printKnapsack((int) (budget * costMultiplier), wt, val, positions, totalPlayers, playersCount, validateFormation, clubs);
-        return new DreamTeam(indexes.stream().map(players::get).collect(Collectors.toList()));
-    }
+                            int maxGkp = gkpTable[gkpTable.length - 1][(int) (gkpBudget * 10) + 1][1];
 
-    private List<Integer> printKnapsack(int budget, int[] costs, int[] values, int[] positions, int numItems, int playersCount, boolean validateFormation, String[] clubs) {
-        int w;
-        int k;
-        int j;
+                            int maxDef3 = defTable[defTable.length - 1][(int) (defBudget * 10) + 1][3];
+                            int maxDef4 = defTable[defTable.length - 1][(int) (defBudget * 10) + 1][4];
+                            int maxDef5 = defTable[defTable.length - 1][(int) (defBudget * 10) + 1][5];
 
-        int[][][] costMatrix = buildKnapsackTable(budget, costs, values, positions, numItems, playersCount, validateFormation, clubs);
+                            int maxMid2 = midTable[midTable.length - 1][(int) (midBudget * 10) + 1][2];
+                            int maxMid3 = midTable[midTable.length - 1][(int) (midBudget * 10) + 1][3];
+                            int maxMid4 = midTable[midTable.length - 1][(int) (midBudget * 10) + 1][4];
+                            int maxMid5 = midTable[midTable.length - 1][(int) (midBudget * 10) + 1][5];
 
-        int bestValue = -1;
-        int currentIndex = -1;
-        int currentCost = -1;
-        int currentCount = -1;
+                            int maxFwd1 = fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][1];
+                            int maxFwd2 = fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][2];
+                            int maxFwd3 = fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][3];
 
-        for (j = numItems; j > 0; j--) {
-            for (w = 0; w < budget + 1; w++) {
-                for (k = 0; k < playersCount + 1; k++) {
-                    int value = costMatrix[j][w][k];
-                    if (((bestValue == -1) || (value > bestValue))) {
-                        currentIndex = j;
-                        currentCost = w;
-                        currentCount = k;
-                        bestValue = value;
-                    }
-                }
-            }
-        }
+                            int f352 = maxGkp + maxDef3 + maxMid5 + maxFwd2;
+                            int f343 = maxGkp + maxDef3 + maxMid4 + maxFwd3;
+                            int f451 = maxGkp + maxDef4 + maxMid5 + maxFwd1;
+                            int f442 = maxGkp + maxDef4 + maxMid4 + maxFwd2;
+                            int f433 = maxGkp + maxDef4 + maxMid3 + maxFwd3;
+                            int f541 = maxGkp + maxDef5 + maxMid4 + maxFwd1;
+                            int f532 = maxGkp + maxDef5 + maxMid3 + maxFwd2;
+                            int f523 = maxGkp + maxDef5 + maxMid2 + maxFwd3;
 
-        int res = costMatrix[currentIndex][currentCost][currentCount];
-        List<Integer> indexes = getIndexes(costs, values, currentCost, playersCount, costMatrix, currentIndex, res);
-        if (indexes.size() != playersCount) {
-            throw new RuntimeException(String.format("Dream Team is of different size. [Expected: %d player] [Actual: %d players]", playersCount, indexes.size()));
-        }
-        return indexes;
-    }
+                            List<Integer> formations = Arrays.asList(f352, f343, f451, f442, f433, f541, f532, f523);
+                            Integer maxFormation = Collections.max(formations);
 
-    private List<Integer> getIndexes(int[] costs, int[] values, int w, int k, int[][][] costMatrix, int currentIndex, int res) {
-        List<Integer> indexes = new ArrayList<>();
-        int i;
+                            if (maxFormation > best) {
 
-        for (i = currentIndex; i > 0 && res > 0; i--) {
-            if (k > 0 && res > costMatrix[i - 1][w][k] && costMatrix[i - 1][w][k] >= 0) {
-                indexes.add(i - 1);
-                res = res - values[i - 1];
-                w = w - costs[i - 1];
-                k -= 1;
-            }
-        }
-        return indexes;
-    }
+                                best = maxFormation;
 
-    private int[][][] buildKnapsackTable(int budget, int[] costs, int[] values, int[] positionsCodes, int numItems, int playersCount, boolean validateFormation, String[] clubs) {
-        int i;
-        int w;
-        int k;
-        int[][][] costMatrix = new int[numItems + 1][budget + 1][playersCount + 1];
+                                gkpK = 1;
+                                gkpW = (int) (gkpBudget * 10) + 1;
+                                defW = (int) (defBudget * 10) + 1;
+                                midW = (int) (midBudget * 10) + 1;
+                                fwdW = (int) (fwdBudget * 10) + 1;
 
-        for (i = 0; i <= numItems; i++) {
-            for (w = 0; w <= budget; w++) {
-                for (k = 0; k <= playersCount; k++) {
-                    if (i == 0 || w == 0 || k == 0) {
-                        costMatrix[i][w][k] = 0;
-                    } else if ((costs[i - 1] <= w)) {
-
-                        int nextValue = Math.max(
-                                values[i - 1] + costMatrix[i - 1][w - costs[i - 1]][k - 1],
-                                costMatrix[i - 1][w][k]);
-                        costMatrix[i][w][k] = nextValue;
-
-                        if (validateFormation) {
-                            List<Integer> indexes = getIndexes(costs, values, w, k, costMatrix, i, costMatrix[i][w][k]);
-                            List<Position> positionsToValidate = indexes.stream().map(index -> Position.getPositionByCode(Integer.toString(positionsCodes[index]))).collect(Collectors.toList());
-                            List<String> clubsToValidate = indexes.stream().map(index -> clubs[index]).collect(Collectors.toList());
-
-                            if (isNotRespectingFormationAndClubLimits(positionsToValidate, clubsToValidate)) {
-                                costMatrix[i][w][k] = costMatrix[i - 1][w][k];
+                                int i = formations.indexOf(maxFormation);
+                                if (i == 0) {
+                                    defK = 3;
+                                    midK = 5;
+                                    fwdK = 2;
+                                } else if (i == 1) {
+                                    defK = 3;
+                                    midK = 4;
+                                    fwdK = 3;
+                                } else if (i == 2) {
+                                    defK = 4;
+                                    midK = 5;
+                                    fwdK = 1;
+                                } else if (i == 3) {
+                                    defK = 4;
+                                    midK = 4;
+                                    fwdK = 2;
+                                } else if (i == 4) {
+                                    defK = 4;
+                                    midK = 3;
+                                    fwdK = 3;
+                                } else if (i == 5) {
+                                    defK = 5;
+                                    midK = 4;
+                                    fwdK = 1;
+                                } else if (i == 6) {
+                                    defK = 5;
+                                    midK = 3;
+                                    fwdK = 2;
+                                } else if (i == 7) {
+                                    defK = 5;
+                                    midK = 2;
+                                    fwdK = 3;
+                                }
                             }
                         }
-
-                    } else {
-                        costMatrix[i][w][k] = costMatrix[i - 1][w][k];
                     }
                 }
             }
         }
-        return costMatrix;
+
+        List<PlayerDto> goalkeeper = knapsackTableBuilder.getPlayersForAnyCell(gkpTable, gkpTable.length - 1, gkpW, gkpK, allGoalkeepers, valueFunction);
+        List<PlayerDto> defenders = knapsackTableBuilder.getPlayersForAnyCell(defTable, defTable.length - 1, defW, defK, allDefenders, valueFunction);
+        List<PlayerDto> midfielders = knapsackTableBuilder.getPlayersForAnyCell(midTable, midTable.length - 1, midW, midK, allMidfielders, valueFunction);
+        List<PlayerDto> forwards = knapsackTableBuilder.getPlayersForAnyCell(fwdTable, fwdTable.length - 1, fwdW, fwdK, allForwards, valueFunction);
+
+        return new DreamTeam(goalkeeper, defenders, midfielders, forwards);
     }
 
     private boolean isNotRespectingFormationAndClubLimits(List<Position> positions, List<String> clubsToValidate) {

@@ -2,6 +2,7 @@ package com.fplstatistics.app;
 
 import com.fplstatistics.app.knapsack.DreamTeam;
 import com.fplstatistics.app.knapsack.DreamTeamService;
+import com.fplstatistics.app.knapsack.KnapsackTableBuilder;
 import com.fplstatistics.app.player.PlayerDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 public class DreamTeamServiceTest {
 
-    private final DreamTeamService dreamTeamService = new DreamTeamService();
+    private final DreamTeamService dreamTeamService = new DreamTeamService(new KnapsackTableBuilder());
 
     @Test
     void zeroBudget_throwsException() {

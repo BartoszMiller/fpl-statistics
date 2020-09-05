@@ -16,17 +16,17 @@ public class KnapsackTableBuilder {
     private static final int COST_MULTIPLIER = 10;
     private static final int VALUE_MULTIPLIER = 100;
 
-    public int[][][] buildTable(int maxWeight, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
+    public int[][][] buildTable(double maxWeight, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
 
-        maxWeight *= COST_MULTIPLIER;
+        int multipliedMaxWeight = (int) maxWeight * COST_MULTIPLIER;
         int[] weights = getWeightsFromPlayers(players);
         int[] values = getValuesFromPlayers(players, valueFunction);
 
         int numberOfItems = weights.length;
-        int[][][] table = new int[numberOfItems + 1][maxWeight + 1][playersCount + 1];
+        int[][][] table = new int[numberOfItems + 1][multipliedMaxWeight + 1][playersCount + 1];
 
         for (int n = 0; n <= numberOfItems; n++) {
-            for (int w = 0; w <= maxWeight; w++) {
+            for (int w = 0; w <= multipliedMaxWeight; w++) {
                 for (int k = 0; k <= playersCount; k++) {
                     if (n == 0 || w == 0 || k == 0) {
                         table[n][w][k] = 0;
@@ -54,6 +54,10 @@ public class KnapsackTableBuilder {
     private List<PlayerDto> traversePlayersInTable(int[][][] table, int n, int w, int k, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
         int[] weights = getWeightsFromPlayers(players);
         int[] values = getValuesFromPlayers(players, valueFunction);
+
+        while (w > 0 && table[n][w - 1][k] == table[n][w][k]) {
+            w--;
+        }
 
         int result = table[n][w][k];
         List<Integer> indexes = new ArrayList<>();

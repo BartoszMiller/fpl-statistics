@@ -38,12 +38,12 @@ public class PlayersController {
             @RequestParam(value = "position", required = false) String positionCode) {
 
         List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage);
-        //printTeam(players);
+        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(83, players, PlayerDto::getPoints);
+        printTeam(dreamTeam);
         return returnPlayersSorted(sort, players);
     }
 
-    private void printTeam(List<PlayerDto> players) {
-        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(83, players, PlayerDto::getPoints);
+    private void printTeam(DreamTeam dreamTeam) {
         System.out.println("Team price: " + dreamTeam.getTeamPrice());
         System.out.println("Total points: " + dreamTeam.getTotalPoints());
         System.out.println("Total value: " + dreamTeam.getTeamValue());
