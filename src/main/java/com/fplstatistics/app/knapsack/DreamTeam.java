@@ -11,7 +11,7 @@ public class DreamTeam {
 
     private final List<PlayerDto> players;
 
-    DreamTeam(List<PlayerDto> players) {
+    public DreamTeam(List<PlayerDto> players) {
         players.sort(Comparator.comparingInt(o -> Position.valueOf(o.getPosition()).getCode()));
         this.players = players;
     }

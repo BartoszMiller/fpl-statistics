@@ -16,7 +16,7 @@ public class KnapsackTableBuilder {
     private static final int COST_MULTIPLIER = 10;
     private static final int VALUE_MULTIPLIER = 100;
 
-    int[][] buildTable(int maxWeight, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+    public int[][] buildTable(int maxWeight, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
 
         maxWeight *= COST_MULTIPLIER;
         int[] weights = getWeightsFromPlayers(players);
@@ -41,7 +41,7 @@ public class KnapsackTableBuilder {
         return table;
     }
 
-    int[][][] buildTable(int maxWeight, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
+    public int[][][] buildTable(int maxWeight, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
 
         maxWeight *= COST_MULTIPLIER;
         int[] weights = getWeightsFromPlayers(players);
@@ -68,7 +68,7 @@ public class KnapsackTableBuilder {
         return table;
     }
 
-    List<PlayerDto> getSelectedPlayers(int[][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+    public List<PlayerDto> getSelectedPlayers(int[][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
 
         int[] weights = getWeightsFromPlayers(players);
         int[] values = getValuesFromPlayers(players, valueFunction);
@@ -90,7 +90,7 @@ public class KnapsackTableBuilder {
         return indexes.stream().map(players::get).collect(Collectors.toList());
     }
 
-    List<PlayerDto> getSelectedPlayers(int[][][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+    public List<PlayerDto> getSelectedPlayers(int[][][] table, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
 
         int[] weights = getWeightsFromPlayers(players);
         int[] values = getValuesFromPlayers(players, valueFunction);
