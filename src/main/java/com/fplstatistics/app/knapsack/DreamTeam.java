@@ -48,8 +48,8 @@ public class DreamTeam {
         return players.stream().mapToDouble(PlayerDto::getCost).sum();
     }
 
-    public double getTotalPoints() {
-        return players.stream().mapToDouble(PlayerDto::getPoints).sum();
+    public int getTotalPoints() {
+        return players.stream().mapToInt(PlayerDto::getPoints).sum();
     }
 
     public double getTeamValue() {

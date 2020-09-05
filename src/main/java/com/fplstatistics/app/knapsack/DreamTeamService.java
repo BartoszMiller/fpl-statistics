@@ -140,8 +140,12 @@ public class DreamTeamService {
         Map<String, Long> clubsToCount = clubsToValidate.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
         return clubsToCount.values().stream().anyMatch(count -> count > 3) ||
-                (Collections.frequency(positions, Position.DEF) == 5 && Collections.frequency(positions, Position.MID) == 5) || // avoid 5-5-0 formation
-                (Collections.frequency(positions, Position.DEF) == 2 && Collections.frequency(positions, Position.MID) == 5) || // avoid 2-5-3 formation
+                (Collections.frequency(positions, Position.DEF) == 5 && Collections.frequency(positions, Position.MID) == 5) || // reject 5-5-0 formation
+                (Collections.frequency(positions, Position.MID) == 5 && Collections.frequency(positions, Position.FWD) == 3) || // reject 2-5-3 formation
+                (Collections.frequency(positions, Position.DEF) == 4 && Collections.frequency(positions, Position.MID) == 5 && Collections.frequency(positions, Position.FWD) == 2) || // reject 4-5-2 formation
+                (Collections.frequency(positions, Position.DEF) == 4 && Collections.frequency(positions, Position.MID) == 4 && Collections.frequency(positions, Position.FWD) == 3) || // reject 4-4-3 formation
+                (Collections.frequency(positions, Position.DEF) == 5 && Collections.frequency(positions, Position.MID) == 4 && Collections.frequency(positions, Position.FWD) == 2) || // reject 5-4-2 formation
+                (Collections.frequency(positions, Position.DEF) == 5 && Collections.frequency(positions, Position.MID) == 3 && Collections.frequency(positions, Position.FWD) == 3) || // reject 5-3-3 formation
                 Collections.frequency(positions, Position.GKP) > 1 ||
                 Collections.frequency(positions, Position.DEF) > 5 ||
                 Collections.frequency(positions, Position.MID) > 5 ||

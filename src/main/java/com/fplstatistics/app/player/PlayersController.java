@@ -38,7 +38,11 @@ public class PlayersController {
             @RequestParam(value = "position", required = false) String positionCode) {
 
         List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage);
+        printTeam(players);
+        return returnPlayersSorted(sort, players);
+    }
 
+    private void printTeam(List<PlayerDto> players) {
         DreamTeam dreamTeam = dreamTeamService.getDreamEleven(83, players, PlayerDto::getPoints);
         System.out.println("Team price: " + dreamTeam.getTeamPrice());
         System.out.println("Total points: " + dreamTeam.getTotalPoints());
@@ -46,8 +50,7 @@ public class PlayersController {
         IntStream.range(0, 11).boxed().map(i -> {
             System.out.print(i + 1 + ". ");
             return dreamTeam.getPlayers().get(i);
-        }).forEach(p -> System.out.println(p.getPosition() + " " + p    .getWebName() + " " + p.getCost() + " " + p.getClub() + " " + p.getAppearances()+ " " + p.getPoints()));
-        return returnPlayersSorted(sort, players);
+        }).forEach(p -> System.out.println(p.getPosition() + " " + p.getWebName() + " " + p.getCost() + " " + p.getClub() + " " + p.getAppearances() + " " + p.getPoints()));
     }
 
     private List<PlayerDto> returnPlayersSorted(@RequestParam("sort") String sort, List<PlayerDto> players) {
