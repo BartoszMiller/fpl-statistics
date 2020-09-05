@@ -106,6 +106,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return lastName + " " + firstName;
+        return webName;
     }
 }

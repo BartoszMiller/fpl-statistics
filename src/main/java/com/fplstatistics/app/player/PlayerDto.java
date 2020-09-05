@@ -71,4 +71,10 @@ public class PlayerDto {
             return getPoints() / player.getCurrentPrice() / getAppearances();
         }
     }
+
+    @Override public String toString() {
+        return "PlayerDto{" +
+                "player=" + player +
+                '}';
+    }
 }

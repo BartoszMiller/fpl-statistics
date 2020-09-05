@@ -55,4 +55,11 @@ public class DreamTeam {
     public double getTeamValue() {
         return players.stream().mapToDouble(PlayerDto::getValue).sum();
     }
+
+    @Override
+    public String toString() {
+        return "DreamTeam{" +
+                "players=" + players +
+                '}';
+    }
 }

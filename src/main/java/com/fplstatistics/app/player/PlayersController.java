@@ -38,7 +38,7 @@ public class PlayersController {
             @RequestParam(value = "position", required = false) String positionCode) {
 
         List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage);
-        printTeam(players);
+        //printTeam(players);
         return returnPlayersSorted(sort, players);
     }
 
