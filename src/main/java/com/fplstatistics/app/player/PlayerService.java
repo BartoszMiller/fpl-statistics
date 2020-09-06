@@ -43,7 +43,7 @@ public class PlayerService {
         int roundDiff = roundTo - roundFrom + 1;
         int rangeSize = yearDiff * 38 + roundDiff;
 
-        Integer percentageFrom = 0;
+        int percentageFrom = 0;
         if (appPercentage != null) {
             percentageFrom = Integer.parseInt(appPercentage.substring(1));
         }
@@ -59,7 +59,7 @@ public class PlayerService {
         int from = Integer.parseInt(seasonFrom.replace("-", "") + String.format("%02d", roundFrom));
         int to = Integer.parseInt(seasonTo.replace("-", "") + String.format("%02d", roundTo));
 
-        Integer finalPercentageFrom = percentageFrom;
+        int finalPercentageFrom = percentageFrom;
         return roundScoreRepository.findBySeasonRoundBetweenAndPlayerIn(from, to, players)
                 .stream()
                 .collect(groupingBy(RoundScore::getPlayer))
