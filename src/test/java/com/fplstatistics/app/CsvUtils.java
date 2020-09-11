@@ -32,6 +32,7 @@ public class CsvUtils {
         POINTS(47, 25),
         ROUND(38, 19),
         THREAT(46, 24),
+        WAS_HOME(-1, 30),
         NAME(0, 0);
 
         private final int before2019;

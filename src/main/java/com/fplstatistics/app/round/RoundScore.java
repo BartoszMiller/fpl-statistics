@@ -41,6 +41,7 @@ public class RoundScore {
     private int round;
     private int points;
     private int seasonRound;
+    private boolean homeGame;
     private ZonedDateTime kickOff;
 
     public Integer getId() {
@@ -185,6 +186,14 @@ public class RoundScore {
 
     public void setSeasonRound(int seasonRound) {
         this.seasonRound = seasonRound;
+    }
+
+    public boolean isHomeGame() {
+        return homeGame;
+    }
+
+    public void setHomeGame(boolean homeGame) {
+        this.homeGame = homeGame;
     }
 
     @Override

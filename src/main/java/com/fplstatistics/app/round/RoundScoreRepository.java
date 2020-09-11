@@ -20,7 +20,7 @@ public interface RoundScoreRepository extends JpaRepository<RoundScore, Integer>
     @Transactional
     void updateRound(int before, int after);
 
-    List<RoundScore> findBySeasonRoundBetweenAndPlayerIn(int from, int to, Collection<Player> players);
+    List<RoundScore> findBySeasonRoundBetweenAndPlayerInAndHomeGameIn(int from, int to, Collection<Player> players, Collection<Boolean> homeGames);
 
     @Query("select max(rs.round) from RoundScore rs where rs.season = ?1")
     Optional<Integer> findMaxRoundBySeason(Season season);

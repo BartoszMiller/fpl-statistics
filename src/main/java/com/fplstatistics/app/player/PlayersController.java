@@ -1,6 +1,5 @@
 package com.fplstatistics.app.player;
 
-import com.fplstatistics.app.knapsack.DreamTeam;
 import com.fplstatistics.app.knapsack.DreamTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -35,41 +34,32 @@ public class PlayersController {
             @RequestParam("sort") String sort,
             @RequestParam(value = "app", required = false) String appPercentage,
             @RequestParam(value = "team", required = false) List<String> teamShortName,
-            @RequestParam(value = "position", required = false) String positionCode) {
+            @RequestParam(value = "position", required = false) String positionCode,
+            @RequestParam(value = "homeGames", required = false) Boolean includeHomeGames,
+            @RequestParam(value = "awayGames", required = false) Boolean includeAwayGames) {
 
-        List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage);
-        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(83, players, PlayerDto::getPoints);
-        printTeam(dreamTeam);
-        return returnPlayersSorted(sort, players);
-    }
-
-    private void printTeam(DreamTeam dreamTeam) {
-        System.out.println("Team price: " + dreamTeam.getTeamPrice());
-        System.out.println("Total points: " + dreamTeam.getTotalPoints());
-        System.out.println("Total value: " + dreamTeam.getTeamValue());
-        IntStream.range(0, 11).boxed().map(i -> {
-            System.out.print(i + 1 + ". ");
-            return dreamTeam.getPlayers().get(i);
-        }).forEach(p -> System.out.println(p.getPosition() + " " + p.getWebName() + " " + p.getCost() + " " + p.getClub() + " " + p.getAppearances() + " " + p.getPoints()));
-    }
-
-    private List<PlayerDto> returnPlayersSorted(@RequestParam("sort") String sort, List<PlayerDto> players) {
-        if (sort.equalsIgnoreCase("Cost")) {
-            return players.stream().sorted(Comparator.comparing(PlayerDto::getCost).reversed()).collect(Collectors.toList());
-        } else if (sort.equalsIgnoreCase("Appearances")) {
-            return players.stream().sorted(Comparator.comparing(PlayerDto::getAppearances).reversed()).collect(Collectors.toList());
-        } else if (sort.equalsIgnoreCase("Minutes")) {
-            return players.stream().sorted(Comparator.comparing(PlayerDto::getMinutesPerAppearance).reversed()).collect(Collectors.toList());
-        } else if (sort.equalsIgnoreCase("Points")) {
-            return players.stream().sorted(Comparator.comparing(PlayerDto::getPoints).reversed()).collect(Collectors.toList());
-        } else if (sort.equalsIgnoreCase("Points per Apps")) {
-            return players.stream().sorted(Comparator.comparing(PlayerDto::getPointsPerAppearance).reversed()).collect(Collectors.toList());
-        } else if (sort.equalsIgnoreCase("Value")) {
-            return players.stream().sorted(Comparator.comparing(PlayerDto::getValue).reversed()).collect(Collectors.toList());
-        } else if (sort.equalsIgnoreCase("Value per Apps")) {
-            return players.stream().sorted(Comparator.comparing(PlayerDto::getValuePerAppearance).reversed()).collect(Collectors.toList());
-        }
-
+        List<PlayerDto> players = playerService.getPlayers(fromSeason, toSeason, fromRound, toRound, teamShortName, positionCode, appPercentage, includeHomeGames, includeAwayGames);
+        ToDoubleFunction<PlayerDto> function = getFunction(sort);
+        players.sort(Comparator.comparingDouble(function).reversed());
         return players;
+    }
+
+    private ToDoubleFunction<PlayerDto> getFunction(@RequestParam("sort") String sort) {
+        if (sort.equalsIgnoreCase("Cost")) {
+            return PlayerDto::getCost;
+        } else if (sort.equalsIgnoreCase("Appearances")) {
+            return PlayerDto::getAppearances;
+        } else if (sort.equalsIgnoreCase("Minutes")) {
+            return PlayerDto::getMinutesPerAppearance;
+        } else if (sort.equalsIgnoreCase("Points")) {
+            return PlayerDto::getPoints;
+        } else if (sort.equalsIgnoreCase("Points per Apps")) {
+            return PlayerDto::getPointsPerAppearance;
+        } else if (sort.equalsIgnoreCase("Value")) {
+            return PlayerDto::getValue;
+        } else if (sort.equalsIgnoreCase("Value per Apps")) {
+            return PlayerDto::getValuePerAppearance;
+        }
+        return PlayerDto::getPoints;
     }
 }

@@ -36,7 +36,7 @@ public class PlayerDto {
         return player.getCurrentPrice();
     }
 
-    public int getPoints() {
+    public double getPoints() {
         return roundScores.stream().mapToInt(RoundScore::getPoints).sum();
     }
 

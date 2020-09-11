@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,9 @@ public class PlayerService {
                                       Integer roundTo,
                                       List<String> teamShortNames,
                                       String positionCode,
-                                      String appPercentage) {
+                                      String appPercentage,
+                                      Boolean includeHomeGames,
+                                      Boolean includeAwayGames) {
 
         int yearDiff = Integer.parseInt(seasonTo.substring(seasonTo.indexOf('-') + 1)) - Integer.parseInt(seasonFrom.substring(seasonFrom.indexOf('-') + 1));
         int roundDiff = roundTo - roundFrom + 1;
@@ -60,7 +63,7 @@ public class PlayerService {
         int to = Integer.parseInt(seasonTo.replace("-", "") + String.format("%02d", roundTo));
 
         int finalPercentageFrom = percentageFrom;
-        return roundScoreRepository.findBySeasonRoundBetweenAndPlayerIn(from, to, players)
+        return roundScoreRepository.findBySeasonRoundBetweenAndPlayerInAndHomeGameIn(from, to, players, Arrays.asList(includeHomeGames, !includeAwayGames))
                 .stream()
                 .collect(groupingBy(RoundScore::getPlayer))
                 .entrySet()

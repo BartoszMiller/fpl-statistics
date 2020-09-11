@@ -28,14 +28,14 @@ public class DreamTeamService {
         return new DreamTeam(playersForBestCell);
     }
 
-    public DreamTeam getDreamEleven(double budget, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction) {
+    public DreamTeam getDreamEleven(double budget, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction, boolean includeBench) {
 
         List<PlayerDto> allGoalkeepers = players.stream().filter(p -> p.getPosition().equals(Position.GKP.name())).collect(Collectors.toList());
         List<PlayerDto> allDefenders = players.stream().filter(p -> p.getPosition().equals(Position.DEF.name())).collect(Collectors.toList());
         List<PlayerDto> allMidfielders = players.stream().filter(p -> p.getPosition().equals(Position.MID.name())).collect(Collectors.toList());
         List<PlayerDto> allForwards = players.stream().filter(p -> p.getPosition().equals(Position.FWD.name())).collect(Collectors.toList());
 
-        int[][][] gkpTable = knapsackTableBuilder.buildTable(budget, allGoalkeepers, 1, valueFunction);
+        int[][][] gkpTable = knapsackTableBuilder.buildTable(budget, allGoalkeepers, 2, valueFunction);
         int[][][] defTable = knapsackTableBuilder.buildTable(budget, allDefenders, 5, valueFunction);
         int[][][] midTable = knapsackTableBuilder.buildTable(budget, allMidfielders, 5, valueFunction);
         int[][][] fwdTable = knapsackTableBuilder.buildTable(budget, allForwards, 3, valueFunction);
@@ -57,7 +57,8 @@ public class DreamTeamService {
                     for (double fwdBudget = 40; fwdBudget > 0; fwdBudget -= 0.5) {
                         if (gkpBudget + defBudget + midBudget + fwdBudget == budget) {
 
-                            int maxGkp = gkpTable[gkpTable.length - 1][(int) (gkpBudget * 10) + 1][1];
+                            int maxGkp1 = gkpTable[gkpTable.length - 1][(int) (gkpBudget * 10) + 1][1];
+                            int maxGkp2 = gkpTable[gkpTable.length - 1][(int) (gkpBudget * 10) + 1][2];
 
                             int maxDef3 = defTable[defTable.length - 1][(int) (defBudget * 10) + 1][3];
                             int maxDef4 = defTable[defTable.length - 1][(int) (defBudget * 10) + 1][4];
@@ -72,60 +73,68 @@ public class DreamTeamService {
                             int maxFwd2 = fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][2];
                             int maxFwd3 = fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][3];
 
-                            int f352 = maxGkp + maxDef3 + maxMid5 + maxFwd2;
-                            int f343 = maxGkp + maxDef3 + maxMid4 + maxFwd3;
-                            int f451 = maxGkp + maxDef4 + maxMid5 + maxFwd1;
-                            int f442 = maxGkp + maxDef4 + maxMid4 + maxFwd2;
-                            int f433 = maxGkp + maxDef4 + maxMid3 + maxFwd3;
-                            int f541 = maxGkp + maxDef5 + maxMid4 + maxFwd1;
-                            int f532 = maxGkp + maxDef5 + maxMid3 + maxFwd2;
-                            int f523 = maxGkp + maxDef5 + maxMid2 + maxFwd3;
+                            int f352 = maxGkp1 + maxDef3 + maxMid5 + maxFwd2;
+                            int f343 = maxGkp1 + maxDef3 + maxMid4 + maxFwd3;
+                            int f451 = maxGkp1 + maxDef4 + maxMid5 + maxFwd1;
+                            int f442 = maxGkp1 + maxDef4 + maxMid4 + maxFwd2;
+                            int f433 = maxGkp1 + maxDef4 + maxMid3 + maxFwd3;
+                            int f541 = maxGkp1 + maxDef5 + maxMid4 + maxFwd1;
+                            int f532 = maxGkp1 + maxDef5 + maxMid3 + maxFwd2;
+                            int f523 = maxGkp1 + maxDef5 + maxMid2 + maxFwd3;
+                            int f553 = maxGkp2 + maxDef5 + maxMid5 + maxFwd3;
 
                             List<Integer> formations = Arrays.asList(f352, f343, f451, f442, f433, f541, f532, f523);
-                            Integer maxFormation = Collections.max(formations);
+                            Integer maxFormation = includeBench ? f553 : Collections.max(formations);
 
                             if (maxFormation > best) {
 
                                 best = maxFormation;
 
-                                gkpK = 1;
                                 gkpW = (int) (gkpBudget * 10) + 1;
                                 defW = (int) (defBudget * 10) + 1;
                                 midW = (int) (midBudget * 10) + 1;
                                 fwdW = (int) (fwdBudget * 10) + 1;
 
-                                int i = formations.indexOf(maxFormation);
-                                if (i == 0) {
-                                    defK = 3;
+                                if (!includeBench) {
+                                    gkpK = 1;
+                                    int i = formations.indexOf(maxFormation);
+                                    if (i == 0) {
+                                        defK = 3;
+                                        midK = 5;
+                                        fwdK = 2;
+                                    } else if (i == 1) {
+                                        defK = 3;
+                                        midK = 4;
+                                        fwdK = 3;
+                                    } else if (i == 2) {
+                                        defK = 4;
+                                        midK = 5;
+                                        fwdK = 1;
+                                    } else if (i == 3) {
+                                        defK = 4;
+                                        midK = 4;
+                                        fwdK = 2;
+                                    } else if (i == 4) {
+                                        defK = 4;
+                                        midK = 3;
+                                        fwdK = 3;
+                                    } else if (i == 5) {
+                                        defK = 5;
+                                        midK = 4;
+                                        fwdK = 1;
+                                    } else if (i == 6) {
+                                        defK = 5;
+                                        midK = 3;
+                                        fwdK = 2;
+                                    } else if (i == 7) {
+                                        defK = 5;
+                                        midK = 2;
+                                        fwdK = 3;
+                                    }
+                                } else {
+                                    gkpK = 2;
+                                    defK = 5;
                                     midK = 5;
-                                    fwdK = 2;
-                                } else if (i == 1) {
-                                    defK = 3;
-                                    midK = 4;
-                                    fwdK = 3;
-                                } else if (i == 2) {
-                                    defK = 4;
-                                    midK = 5;
-                                    fwdK = 1;
-                                } else if (i == 3) {
-                                    defK = 4;
-                                    midK = 4;
-                                    fwdK = 2;
-                                } else if (i == 4) {
-                                    defK = 4;
-                                    midK = 3;
-                                    fwdK = 3;
-                                } else if (i == 5) {
-                                    defK = 5;
-                                    midK = 4;
-                                    fwdK = 1;
-                                } else if (i == 6) {
-                                    defK = 5;
-                                    midK = 3;
-                                    fwdK = 2;
-                                } else if (i == 7) {
-                                    defK = 5;
-                                    midK = 2;
                                     fwdK = 3;
                                 }
                             }

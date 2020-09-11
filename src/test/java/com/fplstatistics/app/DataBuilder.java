@@ -55,13 +55,13 @@ class DataBuilder {
     @Test
     void initNewSeason() throws IOException, URISyntaxException {
 
-        createSeasons();
-
-        initTeamsForActiveSeason();
-        initPlayersForActiveSeason();
-        exportRoundScoresToDatabase("2016-17");
-        exportRoundScoresToDatabase("2017-18");
-        exportRoundScoresToDatabase("2018-19");
+//        createSeasons();
+//
+//        initTeamsForActiveSeason();
+//        initPlayersForActiveSeason();
+//        exportRoundScoresToDatabase("2016-17");
+//        exportRoundScoresToDatabase("2017-18");
+//        exportRoundScoresToDatabase("2018-19");
         exportRoundScoresToDatabase("2019-20");
     }
 
@@ -98,6 +98,7 @@ class DataBuilder {
             roundScore.setLastName(name[1]);
             roundScore.setPlayer(playerRepository.findByFirstNameAndLastName(roundScore.getFirstName(), roundScore.getLastName()));
             roundScore.setSeasonRound(Integer.parseInt(seasonCode.replace("-", "") + String.format("%02d", roundScore.getRound())));
+            roundScore.setHomeGame(Boolean.valueOf(roundScoreCsv[CsvUtils.CSV_INDEX.WAS_HOME.getIndexBySeason(seasonCode)]));
             roundScoreRepository.save(roundScore);
         });
         System.out.println("Finished export for season " + seasonCode);

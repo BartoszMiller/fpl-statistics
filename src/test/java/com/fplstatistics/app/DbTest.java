@@ -31,7 +31,7 @@ class DbTest {
 
         // when
         List<PlayerDto> players = getPlayers(gameWeek);
-        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(budget, players, PlayerDto::getPoints);
+        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(budget, players, PlayerDto::getPoints, false);
 
         // then
         assertThat(dreamTeam.getTotalPoints()).isEqualTo(131);
@@ -47,7 +47,7 @@ class DbTest {
 
         // when
         List<PlayerDto> players = getPlayers(gameWeek);
-        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(budget, players, PlayerDto::getPoints);
+        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(budget, players, PlayerDto::getPoints, false);
 
         // then
         assertThat(dreamTeam.getTotalPoints()).isEqualTo(151);
@@ -55,6 +55,6 @@ class DbTest {
     }
 
     private List<PlayerDto> getPlayers(int round) {
-        return playerService.getPlayers("2019-20", "2019-20", round, round, new ArrayList<>(), null, "90-100");
+        return playerService.getPlayers("2019-20", "2019-20", round, round, new ArrayList<>(), null, ">90", true, true);
     }
 }

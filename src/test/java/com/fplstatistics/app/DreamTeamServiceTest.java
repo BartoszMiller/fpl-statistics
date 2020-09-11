@@ -162,7 +162,7 @@ public class DreamTeamServiceTest {
         // given
         int budget = 15;
 
-        List<PlayerDto> players = dreamTeamService.getDreamEleven(budget, getPlayersStubRespectFormationAndClubLimit(), PlayerDto::getValue).getPlayers();
+        List<PlayerDto> players = dreamTeamService.getDreamEleven(budget, getPlayersStubRespectFormationAndClubLimit(), PlayerDto::getValue, false).getPlayers();
         List<String> names = players.stream().map(PlayerDto::getWebName).collect(Collectors.toList());
         assertThat(players.size()).isEqualTo(11);
 
@@ -175,7 +175,7 @@ public class DreamTeamServiceTest {
         // given
         int budget = 15;
 
-        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(budget, getDataFor_253_formationBug(), PlayerDto::getValue);
+        DreamTeam dreamTeam = dreamTeamService.getDreamEleven(budget, getDataFor_253_formationBug(), PlayerDto::getValue, false);
         List<String> playerNames = dreamTeam.getPlayers().stream().map(PlayerDto::getWebName).collect(Collectors.toList());
 
         assertThat(dreamTeam.getFormation()).isNotEqualTo(253);
