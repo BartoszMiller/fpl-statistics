@@ -30,6 +30,8 @@ public class DreamTeamService {
 
     public DreamTeam getDreamEleven(double budget, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction, List<PlayerDto> whiteList) {
 
+        double whitelistPrice = whiteList.stream().mapToDouble(PlayerDto::getCost).sum();
+        budget -= whitelistPrice;
         players.removeAll(whiteList);
 
         List<PlayerDto> allGoalkeepers = players.stream().filter(p -> p.getPosition().equals(Position.GKP.name())).collect(Collectors.toList());
@@ -152,10 +154,10 @@ public class DreamTeamService {
             }
         }
 
-        gkpK -= whiteListGoalkeepers.size();
-        defK -= whiteListDefenders.size();
-        midK -= whiteListMidfielders.size();
-        fwdK -= whiteListForwards.size();
+        gkpK = Math.max(gkpK - whiteListGoalkeepers.size(), 0);
+        defK = Math.max(defK - whiteListDefenders.size(), 0);
+        midK = Math.max(midK - whiteListMidfielders.size(), 0);
+        fwdK = Math.max(fwdK - whiteListForwards.size(), 0);
 
         List<PlayerDto> goalkeeper = knapsackTableBuilder.getPlayersForAnyCell(gkpTable, gkpTable.length - 1, gkpW, gkpK, allGoalkeepers, valueFunction);
         List<PlayerDto> defenders = knapsackTableBuilder.getPlayersForAnyCell(defTable, defTable.length - 1, defW, defK, allDefenders, valueFunction);

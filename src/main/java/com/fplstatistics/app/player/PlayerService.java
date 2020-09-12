@@ -11,9 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -63,13 +65,17 @@ public class PlayerService {
         int to = Integer.parseInt(seasonTo.replace("-", "") + String.format("%02d", roundTo));
 
         int finalPercentageFrom = percentageFrom;
-        return roundScoreRepository.findBySeasonRoundBetweenAndPlayerInAndHomeGameIn(from, to, players, Arrays.asList(includeHomeGames, !includeAwayGames))
+        Set<PlayerDto> playersWithScores = roundScoreRepository.findBySeasonRoundBetweenAndPlayerInAndHomeGameIn(from, to, players, Arrays.asList(includeHomeGames, !includeAwayGames))
                 .stream()
                 .collect(groupingBy(RoundScore::getPlayer))
                 .entrySet()
                 .stream()
                 .map(playerToRoundScore -> new PlayerDto(playerToRoundScore.getKey(), playerToRoundScore.getValue()))
-                .filter(playerDto -> (finalPercentageFrom <= (playerDto.getAppearances() * 100 / rangeSize)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
+
+        Set<PlayerDto> allPlayers = players.stream().map(player -> new PlayerDto(player, new ArrayList<>())).collect(Collectors.toSet());
+        playersWithScores.addAll(allPlayers);
+
+        return playersWithScores.stream().filter(playerDto -> (finalPercentageFrom <= (playerDto.getAppearances() * 100 / rangeSize))).collect(Collectors.toList());
     }
 }

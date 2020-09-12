@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,27 +39,33 @@ public class BlackWhiteListService {
 
     void addToBlackList(Integer playerId) {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Cannot find player"));
-        BlackList blackList = new BlackList();
-        blackList.setPlayer(player);
-        blackListRepository.save(blackList);
+        Optional<BlackList> blackListOptional = blackListRepository.findByPlayer(player);
+        if (!blackListOptional.isPresent()) {
+            BlackList blackList = new BlackList();
+            blackList.setPlayer(player);
+            blackListRepository.save(blackList);
+        }
     }
 
     void addToWhiteList(Integer playerId) {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Cannot find player"));
-        WhiteList whiteList = new WhiteList();
-        whiteList.setPlayer(player);
-        whiteListRepository.save(whiteList);
+        Optional<WhiteList> whiteListOptional = whiteListRepository.findByPlayer(player);
+        if (!whiteListOptional.isPresent()) {
+            WhiteList whiteList = new WhiteList();
+            whiteList.setPlayer(player);
+            whiteListRepository.save(whiteList);
+        }
     }
 
     void removeFromBlackList(Integer playerId) {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Cannot find player"));
-        BlackList blackList = blackListRepository.findByPlayer(player);
-        blackListRepository.deleteById(blackList.getId());
+        Optional<BlackList> blackList = blackListRepository.findByPlayer(player);
+        blackList.ifPresent(blackList1 -> blackListRepository.deleteById(blackList1.getId()));
     }
 
     void removeFromWhiteList(Integer playerId) {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Cannot find player"));
-        WhiteList whiteList = whiteListRepository.findByPlayer(player);
-        whiteListRepository.deleteById(whiteList.getId());
+        Optional<WhiteList> whiteList = whiteListRepository.findByPlayer(player);
+        whiteList.ifPresent(whiteList1 -> whiteListRepository.deleteById(whiteList1.getId()));
     }
 }

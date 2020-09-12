@@ -1,6 +1,5 @@
 package com.fplstatistics.app.player;
 
-import com.fplstatistics.app.knapsack.DreamTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,19 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.ToDoubleFunction;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class PlayersController {
 
     private final PlayerService playerService;
-    private final DreamTeamService dreamTeamService;
 
     @Autowired
-    public PlayersController(PlayerService playerService, DreamTeamService dreamTeamService) {
+    public PlayersController(PlayerService playerService) {
         this.playerService = playerService;
-        this.dreamTeamService = dreamTeamService;
     }
 
     @GetMapping("/players")

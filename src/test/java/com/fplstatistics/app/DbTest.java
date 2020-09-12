@@ -92,6 +92,9 @@ class DbTest {
         assertThat(teamFromWhiteList.getFormation()).isEqualTo(433);
         assertThat(teamFromWhiteList.getTotalPoints()).isEqualTo(151);
         assertThat(teamFromWhiteList.getTeamPrice()).isEqualTo(71.5);
+        assertThat(teamFromWhiteList.getFormation()).isEqualTo(dreamTeam.getFormation());
+        assertThat(teamFromWhiteList.getTotalPoints()).isEqualTo(dreamTeam.getTotalPoints());
+        assertThat(teamFromWhiteList.getTeamPrice()).isEqualTo(dreamTeam.getTeamPrice());
     }
 
     @Test
@@ -144,6 +147,9 @@ class DbTest {
         assertThat(teamFromWhiteList.getFormation()).isEqualTo(352);
         assertThat(teamFromWhiteList.getTotalPoints()).isEqualTo(131);
         assertThat(teamFromWhiteList.getTeamPrice()).isEqualTo(83.0);
+        assertThat(teamFromWhiteList.getFormation()).isEqualTo(dreamTeam.getFormation());
+        assertThat(teamFromWhiteList.getTotalPoints()).isEqualTo(dreamTeam.getTotalPoints());
+        assertThat(teamFromWhiteList.getTeamPrice()).isEqualTo(dreamTeam.getTeamPrice());
     }
 
     @Test
@@ -163,6 +169,9 @@ class DbTest {
         assertThat(teamFromWhiteList.getFormation()).isEqualTo(352);
         assertThat(teamFromWhiteList.getTotalPoints()).isEqualTo(131);
         assertThat(teamFromWhiteList.getTeamPrice()).isEqualTo(83.0);
+        assertThat(teamFromWhiteList.getFormation()).isEqualTo(dreamTeam.getFormation());
+        assertThat(teamFromWhiteList.getTotalPoints()).isEqualTo(dreamTeam.getTotalPoints());
+        assertThat(teamFromWhiteList.getTeamPrice()).isEqualTo(dreamTeam.getTeamPrice());
     }
 
     private List<PlayerDto> getPlayers(int round) {

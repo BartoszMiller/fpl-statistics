@@ -16,6 +16,10 @@ public class PlayerDto {
         this.roundScores = roundScores;
     }
 
+    public Integer getId() {
+        return player.getId();
+    }
+
     public String getWebName() {
         return player.getWebName();
     }
