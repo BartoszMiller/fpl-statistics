@@ -28,6 +28,150 @@ public class DreamTeamService {
         return new DreamTeam(playersForBestCell);
     }
 
+    public DreamTeam getDreamEleven(double budget, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction, List<PlayerDto> whiteList) {
+
+        List<PlayerDto> allGoalkeepers = players.stream().filter(p -> p.getPosition().equals(Position.GKP.name())).collect(Collectors.toList());
+        List<PlayerDto> allDefenders = players.stream().filter(p -> p.getPosition().equals(Position.DEF.name())).collect(Collectors.toList());
+        List<PlayerDto> allMidfielders = players.stream().filter(p -> p.getPosition().equals(Position.MID.name())).collect(Collectors.toList());
+        List<PlayerDto> allForwards = players.stream().filter(p -> p.getPosition().equals(Position.FWD.name())).collect(Collectors.toList());
+
+        List<PlayerDto> whiteListGoalkeepers = whiteList.stream().filter(p -> p.getPosition().equals(Position.GKP.name())).collect(Collectors.toList());
+        List<PlayerDto> whiteListDefenders = whiteList.stream().filter(p -> p.getPosition().equals(Position.DEF.name())).collect(Collectors.toList());
+        List<PlayerDto> whiteListMidfielders = whiteList.stream().filter(p -> p.getPosition().equals(Position.MID.name())).collect(Collectors.toList());
+        List<PlayerDto> whiteListForwards = whiteList.stream().filter(p -> p.getPosition().equals(Position.FWD.name())).collect(Collectors.toList());
+
+        int[][][] gkpTable = knapsackTableBuilder.buildTable(budget, allGoalkeepers, 1 - whiteListGoalkeepers.size(), valueFunction);
+        int[][][] defTable = knapsackTableBuilder.buildTable(budget, allDefenders, 5 - whiteListDefenders.size(), valueFunction);
+        int[][][] midTable = knapsackTableBuilder.buildTable(budget, allMidfielders, 5 - whiteListMidfielders.size(), valueFunction);
+        int[][][] fwdTable = knapsackTableBuilder.buildTable(budget, allForwards, 3 - whiteListForwards.size(), valueFunction);
+
+        int best = 0;
+
+        int gkpW = 0;
+        int gkpK = 0;
+        int defW = 0;
+        int defK = 0;
+        int midW = 0;
+        int midK = 0;
+        int fwdW = 0;
+        int fwdK = 0;
+
+
+        int gkpNeededCount = 1 - whiteListGoalkeepers.size();
+        int defNeededCount = 5 - whiteListDefenders.size();
+        int midNeededCount = 5 - whiteListMidfielders.size();
+        int fwdNeededCount = 3 - whiteListForwards.size();
+
+        for (double gkpBudget = 20; gkpBudget > 0; gkpBudget -= 0.5) {
+            for (double defBudget = 40; defBudget > 0; defBudget -= 0.5) {
+                for (double midBudget = 60; midBudget > 0; midBudget -= 0.5) {
+                    for (double fwdBudget = 40; fwdBudget > 0; fwdBudget -= 0.5) {
+                        if (gkpBudget + defBudget + midBudget + fwdBudget == budget) {
+
+                            int[] maxGkp = new int[gkpNeededCount];
+                            for (int i : maxGkp) {
+                                maxGkp[i] = gkpTable[gkpTable.length - 1][(int) (gkpBudget * 10) + 1][i + 1];
+                            }
+
+                            int[] maxDef = new int[defNeededCount];
+                            for (int i : maxDef) {
+                                maxDef[i] = defTable[defTable.length - 1][(int) (defBudget * 10) + 1][i + 3];
+                            }
+
+                            int[] maxMid = new int[midNeededCount];
+                            for (int i : maxMid) {
+                                maxMid[i] = midTable[midTable.length - 1][(int) (midBudget * 10) + 1][i + 2];
+                            }
+
+                            int[] maxFwd = new int[fwdNeededCount];
+                            for (int i : maxFwd) {
+                                maxFwd[i] = fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][i + 1];
+                            }
+
+                            int maxGkp1 = whiteListGoalkeepers.isEmpty() ? maxGkp[0] : 0;
+                            int maxDef3 = whiteListDefenders.size() < 3 ? maxDef[maxDef.length - whiteListDefenders.size()] : 0;
+                            int maxDef4 = whiteListDefenders.size() < 4 ? maxDef[maxDef.length - whiteListDefenders.size()] : 0;
+                            int maxDef5 = whiteListDefenders.size() < 5 ? maxDef[maxDef.length - whiteListDefenders.size()] : 0;
+                            int maxMid2 = whiteListMidfielders.size() < 2 ? maxMid[maxMid.length - whiteListMidfielders.size()] : 0;
+                            int maxMid3 = whiteListMidfielders.size() < 3 ? maxMid[maxMid.length - whiteListMidfielders.size()] : 0;
+                            int maxMid4 = whiteListMidfielders.size() < 4 ? maxMid[maxMid.length - whiteListMidfielders.size()] : 0;
+                            int maxMid5 = whiteListMidfielders.size() < 5 ? maxMid[maxMid.length - whiteListMidfielders.size()] : 0;
+                            int maxFwd1 = whiteListForwards.size() < 1 ? maxFwd[maxFwd.length - whiteListForwards.size()] : 0;
+                            int maxFwd2 = whiteListForwards.size() < 2 ? maxFwd[maxFwd.length - whiteListForwards.size()] : 0;
+                            int maxFwd3 = whiteListForwards.size() < 3 ? maxFwd[maxFwd.length - whiteListForwards.size()] : 0;
+                            int f352 = maxGkp1 + maxDef3 + maxMid5 + maxFwd2;
+                            int f343 = maxGkp1 + maxDef3 + maxMid4 + maxFwd3;
+                            int f451 = maxGkp1 + maxDef4 + maxMid5 + maxFwd1;
+                            int f442 = maxGkp1 + maxDef4 + maxMid4 + maxFwd2;
+                            int f433 = maxGkp1 + maxDef4 + maxMid3 + maxFwd3;
+                            int f541 = maxGkp1 + maxDef5 + maxMid4 + maxFwd1;
+                            int f532 = maxGkp1 + maxDef5 + maxMid3 + maxFwd2;
+                            int f523 = maxGkp1 + maxDef5 + maxMid2 + maxFwd3;
+
+                            List<Integer> formations = Arrays.asList(f352, f343, f451, f442, f433, f541, f532, f523);
+                            Integer maxFormation = Collections.max(formations);
+
+                            if (maxFormation > best) {
+
+                                best = maxFormation;
+
+                                gkpW = (int) (gkpBudget * 10) + 1;
+                                defW = (int) (defBudget * 10) + 1;
+                                midW = (int) (midBudget * 10) + 1;
+                                fwdW = (int) (fwdBudget * 10) + 1;
+
+
+                                gkpK = 1;
+                                int i = formations.indexOf(maxFormation);
+                                if (i == 0) {
+                                    defK = 3;
+                                    midK = 5;
+                                    fwdK = 2;
+                                } else if (i == 1) {
+                                    defK = 3;
+                                    midK = 4;
+                                    fwdK = 3;
+                                } else if (i == 2) {
+                                    defK = 4;
+                                    midK = 5;
+                                    fwdK = 1;
+                                } else if (i == 3) {
+                                    defK = 4;
+                                    midK = 4;
+                                    fwdK = 2;
+                                } else if (i == 4) {
+                                    defK = 4;
+                                    midK = 3;
+                                    fwdK = 3;
+                                } else if (i == 5) {
+                                    defK = 5;
+                                    midK = 4;
+                                    fwdK = 1;
+                                } else if (i == 6) {
+                                    defK = 5;
+                                    midK = 3;
+                                    fwdK = 2;
+                                } else if (i == 7) {
+                                    defK = 5;
+                                    midK = 2;
+                                    fwdK = 3;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        List<PlayerDto> goalkeeper = knapsackTableBuilder.getPlayersForAnyCell(gkpTable, gkpTable.length - 1, gkpW, gkpK, allGoalkeepers, valueFunction);
+        List<PlayerDto> defenders = knapsackTableBuilder.getPlayersForAnyCell(defTable, defTable.length - 1, defW, defK, allDefenders, valueFunction);
+        List<PlayerDto> midfielders = knapsackTableBuilder.getPlayersForAnyCell(midTable, midTable.length - 1, midW, midK, allMidfielders, valueFunction);
+        List<PlayerDto> forwards = knapsackTableBuilder.getPlayersForAnyCell(fwdTable, fwdTable.length - 1, fwdW, fwdK, allForwards, valueFunction);
+
+        return new DreamTeam(goalkeeper, defenders, midfielders, forwards);
+    }
+
     public DreamTeam getDreamEleven(double budget, List<PlayerDto> players, ToDoubleFunction<PlayerDto> valueFunction, boolean includeBench) {
 
         List<PlayerDto> allGoalkeepers = players.stream().filter(p -> p.getPosition().equals(Position.GKP.name())).collect(Collectors.toList());

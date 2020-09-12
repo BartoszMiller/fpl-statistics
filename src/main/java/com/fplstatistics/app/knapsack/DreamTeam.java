@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 public class DreamTeam {
 
     private final List<PlayerDto> players;
+    private List<PlayerDto> whiteList;
+    private List<PlayerDto> blackList;
 
     public DreamTeam(List<PlayerDto> players) {
         players.sort(Comparator.comparingInt(o -> Position.valueOf(o.getPosition()).getCode()));
@@ -64,6 +66,22 @@ public class DreamTeam {
 
     public double getTeamValue() {
         return players.stream().mapToDouble(PlayerDto::getValue).sum();
+    }
+
+    public List<PlayerDto> getWhiteList() {
+        return whiteList;
+    }
+
+    public void setWhiteList(List<PlayerDto> whiteList) {
+        this.whiteList = whiteList;
+    }
+
+    public List<PlayerDto> getBlackList() {
+        return blackList;
+    }
+
+    public void setBlackList(List<PlayerDto> blackList) {
+        this.blackList = blackList;
     }
 
     @Override

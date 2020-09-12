@@ -4,6 +4,7 @@ import com.fplstatistics.app.round.RoundScore;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PlayerDto {
 
@@ -70,6 +71,17 @@ public class PlayerDto {
         } else {
             return getPoints() / player.getCurrentPrice() / getAppearances();
         }
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerDto playerDto = (PlayerDto) o;
+        return Objects.equals(player, playerDto.player);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(player);
     }
 
     @Override public String toString() {
