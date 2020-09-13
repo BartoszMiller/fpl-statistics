@@ -68,26 +68,26 @@ public class DreamTeamService {
         int fwdW = 0;
         int fwdK = 0;
 
-        for (double gkpBudget = 20; gkpBudget > 0; gkpBudget -= 0.5) {
-            for (double defBudget = 40; defBudget > 0; defBudget -= 0.5) {
-                for (double midBudget = 60; midBudget > 0; midBudget -= 0.5) {
-                    for (double fwdBudget = 40; fwdBudget > 0; fwdBudget -= 0.5) {
+        for (double gkpBudget = 20; gkpBudget >= 0; gkpBudget -= 0.5) {
+            for (double defBudget = 40; defBudget >= 0; defBudget -= 0.5) {
+                for (double midBudget = 60; midBudget >= 0; midBudget -= 0.5) {
+                    for (double fwdBudget = 40; fwdBudget >= 0; fwdBudget -= 0.5) {
                         if (gkpBudget + defBudget + midBudget + fwdBudget == budget) {
 
-                            int maxGkp1 = gkpTable[gkpTable.length - 1][(int) (gkpBudget * 10) + 1][1 - whiteListGoalkeepers.size()] + whiteListGoalkeeperScores;
+                            int maxGkp1 = gkpTable[gkpTable.length - 1][(int) (gkpBudget * 10)][1 - whiteListGoalkeepers.size()] + whiteListGoalkeeperScores;
 
-                            int maxDef3 = (3 - whiteListDefenders.size()) < 0 ? 0 : defTable[defTable.length - 1][(int) (defBudget * 10) + 1][3 - whiteListDefenders.size()] + whiteListDefenderScores;
-                            int maxDef4 = (4 - whiteListDefenders.size()) < 0 ? 0 : defTable[defTable.length - 1][(int) (defBudget * 10) + 1][4 - whiteListDefenders.size()] + whiteListDefenderScores;
-                            int maxDef5 = (5 - whiteListDefenders.size()) < 0 ? 0 : defTable[defTable.length - 1][(int) (defBudget * 10) + 1][5 - whiteListDefenders.size()] + whiteListDefenderScores;
+                            int maxDef3 = (3 - whiteListDefenders.size()) < 0 ? 0 : defTable[defTable.length - 1][(int) (defBudget * 10)][3 - whiteListDefenders.size()] + whiteListDefenderScores;
+                            int maxDef4 = (4 - whiteListDefenders.size()) < 0 ? 0 : defTable[defTable.length - 1][(int) (defBudget * 10)][4 - whiteListDefenders.size()] + whiteListDefenderScores;
+                            int maxDef5 = (5 - whiteListDefenders.size()) < 0 ? 0 : defTable[defTable.length - 1][(int) (defBudget * 10)][5 - whiteListDefenders.size()] + whiteListDefenderScores;
 
-                            int maxMid2 = (2 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10) + 1][2 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
-                            int maxMid3 = (3 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10) + 1][3 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
-                            int maxMid4 = (4 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10) + 1][4 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
-                            int maxMid5 = (5 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10) + 1][5 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
+                            int maxMid2 = (2 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10)][2 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
+                            int maxMid3 = (3 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10)][3 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
+                            int maxMid4 = (4 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10)][4 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
+                            int maxMid5 = (5 - whiteListMidfielders.size()) < 0 ? 0 : midTable[midTable.length - 1][(int) (midBudget * 10)][5 - whiteListMidfielders.size()] + whiteListMidfieldersScore;
 
-                            int maxFwd1 = (1 - whiteListForwards.size()) < 0 ? 0 : fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][1 - whiteListForwards.size()] + whiteListForwardsScore;
-                            int maxFwd2 = (2 - whiteListForwards.size()) < 0 ? 0 : fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][2 - whiteListForwards.size()] + whiteListForwardsScore;
-                            int maxFwd3 = (3 - whiteListForwards.size()) < 0 ? 0 : fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10) + 1][3 - whiteListForwards.size()] + whiteListForwardsScore;
+                            int maxFwd1 = (1 - whiteListForwards.size()) < 0 ? 0 : fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10)][1 - whiteListForwards.size()] + whiteListForwardsScore;
+                            int maxFwd2 = (2 - whiteListForwards.size()) < 0 ? 0 : fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10)][2 - whiteListForwards.size()] + whiteListForwardsScore;
+                            int maxFwd3 = (3 - whiteListForwards.size()) < 0 ? 0 : fwdTable[fwdTable.length - 1][(int) (fwdBudget * 10)][3 - whiteListForwards.size()] + whiteListForwardsScore;
 
                             int f352 = maxGkp1 + maxDef3 + maxMid5 + maxFwd2;
                             int f343 = maxGkp1 + maxDef3 + maxMid4 + maxFwd3;
@@ -105,10 +105,10 @@ public class DreamTeamService {
 
                                 best = maxFormation;
 
-                                gkpW = (int) (gkpBudget * 10) + 1;
-                                defW = (int) (defBudget * 10) + 1;
-                                midW = (int) (midBudget * 10) + 1;
-                                fwdW = (int) (fwdBudget * 10) + 1;
+                                gkpW = (int) (gkpBudget * 10);
+                                defW = (int) (defBudget * 10);
+                                midW = (int) (midBudget * 10);
+                                fwdW = (int) (fwdBudget * 10);
 
 
                                 gkpK = 1;

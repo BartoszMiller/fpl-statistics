@@ -18,7 +18,7 @@ public class KnapsackTableBuilder {
 
     public int[][][] buildTable(double maxWeight, List<PlayerDto> players, int playersCount, ToDoubleFunction<PlayerDto> valueFunction) {
 
-        int multipliedMaxWeight = (int) maxWeight * COST_MULTIPLIER;
+        int multipliedMaxWeight = (int) (maxWeight * COST_MULTIPLIER);
         int[] weights = getWeightsFromPlayers(players);
         int[] values = getValuesFromPlayers(players, valueFunction);
 

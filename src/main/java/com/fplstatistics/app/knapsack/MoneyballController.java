@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.ToDoubleFunction;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -65,8 +66,8 @@ public class MoneyballController {
         ToDoubleFunction<PlayerDto> function = getFunction(strategy);
         players.sort(Comparator.comparingDouble(function).reversed());
 
-        List<PlayerDto> blackList = blackWhiteListService.getBlackList();
-        List<PlayerDto> whiteList = blackWhiteListService.getWhiteList();
+        List<PlayerDto> blackList = players.stream().filter(p -> blackWhiteListService.getBlackList().contains(p)).collect(Collectors.toList());
+        List<PlayerDto> whiteList = players.stream().filter(p -> blackWhiteListService.getWhiteList().contains(p)).collect(Collectors.toList());
         players.removeAll(blackList);
 
         DreamTeam dreamTeam = dreamTeamService.getDreamEleven(budget, players, function, whiteList);
